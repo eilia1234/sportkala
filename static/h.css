@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+* {
+  box-sizing: border-box;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+.about-us {
+  text-align: center;
+  padding: 40px;
+  background: radial-gradient(circle at top left, #ffffff, #9e1313, #9f0000);
+  color: #d6d6d6;
+  font-family: 'Vazirmatn', sans-serif;
+}
+
+.social-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 300px;
+  margin-top: 40px;
+}
+
+.icon {
+  display: inline-block;
+  font-size: 33px;
+  color: #ffffff;
+  position: relative;
+  padding: 15px;
+  transition: 0.3s ease;
+}
+
+.icon img {
+  width: 170px;
+  height: 170px;
+}
+
+.icon::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 4px;
+  background-color: transparent;
+  transition: 0.3s ease;
+  border-radius: 5px;
+}
+
+.icon.facebook:hover::after {
+  background-color: #032c86;
+  box-shadow: 0 0 12px #6b85bc;
+}
+
+.icon.instagram:hover::after {
+  background-color: #e1306c;
+  box-shadow: 0 0 12px #e1306c;
+}
+
+.icon.eitaa:hover::after {
+  background-color: #f24f1d;
+  box-shadow: 0 0 12px #f2601d;
+}
+
+.icon.rubika:hover::after {
+  background-color: #0064c8;
+  box-shadow: 0 0 12px #ffffff;
+}
+
