@@ -1,0 +1,1026 @@
+
+<!DOCTYPE html>
+<html lang="fa">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="sport kala store">
+    <meta name="keywords" content="sportkala,sport,kala,HTML,CSS">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اسپرت کالا - فروشگاه تجهیزات ورزشی</title>
+    
+    <!-- لینک فایل CSS -->
+    <link rel="stylesheet" href="/static/1.css">
+    
+    <!-- آیکون سایت -->
+    <link rel="icon" type="image/png" href="/static/ChatGPT Image Oct 5, 2025, 09_08_17 AM.png">
+    
+    <!-- فونت آیکون‌ها -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/static/ChatGPT Image Oct 5, 2025, 09_08_17 AM.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+* {
+  margin: 0;
+  box-sizing: border-box;
+  outline: none;
+  font-family: 'Vazirmatn', sans-serif;
+}
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f5f5f5;
+}
+
+    /* 🎯 پیام عضویت موفق */
+.subscribe-message {
+  position: fixed;
+  top: 50%;
+  left: 50%; 
+  transform: translate(-50%, -50%) scale(0.8);
+  background: linear-gradient(135deg, #af4c4c, #cc2e2e);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 16px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease;
+  z-index: 99999;
+}
+
+    .subscribe-message.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+/* 🔴 باکس درصد تخفیف */
+.discount-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: #e53935;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 4px 7px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  direction: rtl;
+  z-index: 5;
+}
+
+.productt h3 {
+  font-size: 14px;
+  margin: 8px 0;
+  color: #333;
+}
+
+.productt .price {
+  font-size: 13px;
+  color: #666;
+}
+
+.productt .price span {
+  text-decoration: line-through;
+  color: #999;
+  margin-left: 6px;
+}
+
+
+#chat-circle {
+  position: fixed;
+  bottom: 100px;
+  left: 0;
+  width: 52px;
+  height: 46px;
+  background: linear-gradient(114deg, #8f4aec, #2586ff);
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  z-index: 9999;
+  cursor: grab;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: width 0.8s ease;
+}
+#chat-circle:active { cursor: grabbing; }
+#chat-circle img {
+  width: 54px;
+  height: 54px;
+}
+.circle-content {
+  display: flex;
+  align-items: center;
+  padding-left: 100px;
+  position: relative;
+}
+
+.chat-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  z-index: 2; /* لوگو همیشه جلو */
+  transition: transform 0.8s ease;
+}
+
+.chat-text {
+  position: absolute;
+  left: 10px; /* پشت لوگو شروع شود */
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.5s ease, left 0.8s ease;
+  z-index: 1; /* متن پشت لوگو */
+}
+
+/* حالت باز شدن */
+#chat-circle.expanded {
+  width:170px;
+}
+
+#chat-circle.expanded .chat-text {
+  opacity: 1;
+  right: 35px; /* متن آرام پشت لوگو حرکت کند */
+}
+
+#chat-circle.expanded .chat-logo {
+  transform: translateX(60px); /* لوگو جلو برود */
+}
+
+/* پنجره چت */
+#chat-window {
+  display: none;
+  position: fixed;
+  bottom: 150px;
+  left: 70px;
+  width: 480px;
+  max-width: 90%;
+  height: 500px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9998;
+  animation: fadeIn 0.3s ease;
+}
+
+/* انیمیشن باز شدن */
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(50px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+/* هدر چت */
+#chat-header {
+  background: linear-gradient(135deg, #c92944, #a21ee9);
+  color: white;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* بدنه چت */
+#chat-body {
+  padding: 15px;
+  height: calc(100% - 110px);
+  overflow-y: auto;
+  background: #fefefe;
+}
+
+.bot-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 6px 0;
+  max-width: 75%;
+  align-self: flex-start;
+}
+
+.bot-header img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.bot-header .bot-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+/* پیام سیریا سمت چپ */
+.message.bot {
+  background: #f1f0f0;
+  color: #222;
+  border-radius: 12px;
+  padding: 10px 14px;
+  max-width: 75%;
+  align-self: flex-start;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+/* لودر سه نقطه بیرون از کادر پیام */
+.bot-loader {
+  display: inline-block;
+  margin: 0 3px 6px 8px;
+  align-self: flex-start;
+}
+
+.loader-dots {
+  display: inline-block;
+  vertical-align: middle;
+  width: 42px;
+  text-align: center;
+}
+.loader-dots span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 0 2px;
+  background: linear-gradient(135deg, #c92944, #a21ee9);;
+  border-radius: 50%;
+  animation: blink 1.2s infinite ease-in-out;
+  opacity: 0.4;
+}
+.loader-dots span:nth-child(2) { animation-delay: 0.18s; }
+.loader-dots span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes blink {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.message.user {
+  background: #b029baf0;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  max-width: 75%;
+  text-align: right;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* ورودی پیام */
+#chat-input {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+#chat-input input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  border-radius: 0 0 0 15px;
+}
+
+#chat-input button {
+  background: linear-gradient(135deg, #9b59b6, #e91e63);
+  color: white;
+  border: none;
+  padding: 0 20px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 0 0 15px 0;
+}
+
+/* 🌈 نوشته قدرت گرفته از ایلیا */
+.powered-by {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 0;
+  background: linear-gradient(90deg, #5964b6, #e91e63);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glow 2s infinite alternate;
+  text-shadow: 0 0 10px rgba(233, 30, 99, 0.8),
+               0 0 20px rgba(155, 89, 182, 0.8),
+               0 0 30px rgba(233, 30, 99, 0.5);
+  border-bottom: 1px solid #eee;
+}
+/* انیمیشن fade-in */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInAnim 1s forwards;
+}
+
+@keyframes fadeInAnim {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* واکنش‌گرایی */
+@media screen and (max-width: 900px) {
+  #chat-window {
+    width: 90%;
+    height: 60%;
+    left: 5%;
+    bottom: 95px;
+  }
+  #chat-circle{
+    bottom: 5%;
+    height: 47px;
+    width: 53px;
+  }
+}
+    .btn {
+      position: relative;
+      background: #0f2027;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .btn:hover {
+      box-shadow: 0 0 20px #c8c8c8, 0 0 40px #ffffff, 0 0 60px #ffffff;
+    }
+
+    .stars {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      font-size: 24px;
+      color: #fffdef;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover .stars {
+      display: block;
+      filter: drop-shadow(0 0 10px #fffdef);
+    }
+  </style>
+<body>
+<header>
+  <div class="header-container">
+    <!-- لوگو -->
+    <div class="logo">
+      <img src="/static/ChatGPT Image Oct 5, 2025, 09_08_17 AM.png" alt="لوگو" class="logo-img">
+      <h1><span class="sport-word">اسپـرت</span> کـالا</h1>
+    </div>
+  </div>
+
+  <!-- آیکون منوی همبرگری فقط برای موبایل -->
+  <div class="menu-icon" id="menuBtn">
+    <i class="fa-solid fa-bars"></i>
+  </div>
+
+  <nav class="navbar" id="navMenu">
+    <a href="/index">خانه</a>
+    <a href="/m">محصولات</a>
+    <a href="/h">درباره ما</a>
+    <a href="/call with us">تماس با ما</a>
+
+    <!-- ورود/خروج فقط در منوی موبایل -->
+    <div class="mobile-auth">
+      {% if user.is_authenticated %}
+        <a href="/logout" title="خروج">
+          <i class="fa-solid fa-right-from-bracket"></i> خروج
+        </a>
+      {% else %}
+        <a href="/login" title="ورود">
+          <i class="fa-solid fa-user"></i> ورود
+        </a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- نمایش خوش آمد گویی و لینک ورود/خروج در دسکتاپ -->
+  <div class="auth-box">
+    {% if user.is_authenticated %}
+      <span> خوش آمدید، {{ user.username }} 👋</span>
+      <a href="/logout" title="خروج">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </a>
+    {% else %}
+      <a href="/login" title="ورود">
+        <i class="fa-solid fa-user"></i>
+      </a>
+    {% endif %}
+  </div>
+</header>
+<!-- نیم‌دایره سمت چپ -->
+
+<div id="chat-circle">
+  <div class="circle-content">
+    <img src="/static/siria3.png" alt="Siria Logo" class="chat-logo">
+    <span class="chat-text">دستیار اسپرت کالا</span>
+  </div>
+</div>
+
+
+<div id="chat-window">
+  <div id="chat-header">
+    <span>سیریا - دستیار اسپرت کالا</span>
+    <button id="chat-close">✖</button>
+  </div>
+  <div class="powered-by">قدرت گرفته از ایلیا ✨</div>
+  <div id="chat-body">
+    <div class="message bot"><p>سلام! من سیریا هستم 😊</p>
+       <p><br>دستیار هوش مصنوعی اسپرت کالا !</p><br>اگر سوالی درباره خرید یا محصولات داری کد یا نام محصول رو وارد کنم. در ضمن به به سوالات دیگه هم پاسخ میدم😉</div>
+  </div>
+  <div id="chat-input">
+    <input type="text" placeholder="از سیریا بپرس....">
+    <button id="send-btn">ارسال</button>
+  </div>
+  <audio id="chat-audio" src="/static/صوت 4.mp3" preload="auto"></audio>
+</div>
+<!-- ====== بخش استوری‌ها ====== -->
+<div class="stories">
+  <div class="story" data-video="/static/iq5.mp4" data-name="کفش فوتبال آدیداس" data-profile="/static/c1.png" data-desc="استوک ادیداس مدل پریدیتور">
+    <div class="story-circle">
+      <img src="/static/c1.png" alt="استوری 1">
+    </div>
+    <p class="story-text">بهترین کفش فوتبال</p>
+  </div>
+  <div class="story" data-video="/static/iq1.mp4" data-name="دمبل حرفه‌ای" data-profile="/static/c3.png" data-desc="دمبل 5 کیلوگرمی حرفه‌ای">
+    <div class="story-circle">
+      <img src="/static/c3.png" alt="استوری 3">
+    </div>
+    <p class="story-text">بهترین دمبل‌ها</p>
+  </div>
+
+  <div class="story" data-video="/static/iq6.mp4" data-name="توپ‌های فوتبال" data-profile="/static/c2.png" data-desc="توپ فوتبال ادیداس یورو 2024">
+    <div class="story-circle">
+      <img src="/static/c2.png" alt="استوری 2">
+    </div>
+    <p class="story-text">توپ فوتبال آدیداس</p>
+  </div>
+
+  <div class="story" data-video="/static/iq2.mp4" data-name="کوله‌های ورزشی" data-profile="/static/Copilot_20251009_050953.png" data-desc="جدیدترین شوزبگ اسپرت کالا">
+    <div class="story-circle">
+      <img src="/static/Copilot_20251009_050953.png" alt="استوری 4">
+    </div>
+    <p class="story-text">کوله‌های ورزشی</p>
+  </div>
+
+  
+  <div class="story" data-video="/static/iq3.mp4" data-name="بطری آب اسپرت" data-profile="/static/قمقمه.jpg" data-desc="بطری آب 1.5 لیتری">
+    <div class="story-circle">
+      <img src="/static/Copilot_20251009_051632.png" alt="استوری 2">
+    </div>
+    <p class="story-text">بطری های آب</p>
+  </div>
+  <div class="story" data-video="/static/iq4.mp4" data-name="ساعت هوشمند ورزشی" data-profile="/static/www.png" data-desc="ساعت هوشمند مدل x124">
+    <div class="story-circle">
+      <img src="/static/www.png" alt="استوری 2">
+    </div>
+    <p class="story-text">ساعت هوشمند ورزشی</p>
+  </div>
+
+
+</div>
+
+<div class="story-modal" id="storyModal">
+  <div class="modal-content">
+    <div class="progress-bar"></div>
+
+    <div class="story-header">
+      <div class="user-info">
+        <img class="user-avatar" src="" alt="">
+        <span class="user-name"></span>
+      </div>
+      <div class="header-buttons">
+        <button id="followBtn">دنبال کردن</button>
+        <button id="closeModal">✕</button>
+      </div>
+    </div>
+
+    <video id="storyVideo" playsinline></video>
+
+    <div class="story-actions">
+      <button class="like-btn">❤️</button>
+      <span class="like-count">۰</span> <!-- 👈 شمارنده لایک -->
+      <button class="mute-btn">🔊</button>
+    </div>
+    <div id="heartPopup" class="heart-popup">❤️</div>
+    <span class="like-count">۰</span>
+
+
+    <div class="story-desc"></div>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="slides">
+    <img src="https://api2.zoomit.ir/media/2022-6-exercise-638bb7c1b90c494dc77f8f7f?w=1200&q=80" class="slide active" alt="slide 1">
+    <img src="https://dl4.fara-download.ir/imgfa/2020/04/16/imgfa_ir_t1_1587075862_5e98db166c326_1.jpg" class="slide" alt="slide 2">
+  </div>
+
+  <!-- نوشته‌ها و دکمه روی تصویر -->
+  <div class="hero-content">
+    <h2>تجهیزات حرفه‌ای برای قهرمانان واقعی</h2>
+    <p>از دمبل تا دوچرخه ثابت، همه‌چی اینجاست!</p>
+    <a href="/m"><button class="btn">مشاهده محصولات</button></a>
+  </div>
+
+  <!-- دکمه‌های قبلی/بعدی -->
+  <button class="prev">❯</button>
+  <button class="next">❮</button>
+</section>
+
+  <section class="amazing-offers">
+  <div class="offers-header">
+    <h2>پیشنهاد شگفت‌انگیز %</h2>
+    <!-- HTML نمایش تایمر -->
+    <div id="countdown" class="countdown">۰۰:۰۰:۰۰</div>
+
+  </div>
+
+  <div class="offers-scroll">
+    <div class="productt">
+      <div class="discount-badge">٪۲۲-</div>
+      <a href="/index11"><img src="https://gishasport.com/wp-content/uploads/2024/04/%DA%A9%D9%81%D8%B4-%D9%88%D8%B1%D8%B2%D8%B4%DB%8C-%D9%85%D8%B1%D8%AF%D8%A7%D9%86%D9%87-%D9%86%D8%A7%DB%8C%DA%A9-%D9%85%D8%AF%D9%84-ZOOMX-CK4318-%D9%85%D8%B4%DA%A9%DB%8C-1.jpg" alt="محصول 1"></a>
+      <h3>کفش ورزشی مردانه کد 105</h3>
+      <p class="price"><span>۱,۴۵۰,۰۰۰</span> <b>۹۹۸,۰۰۰ تومان</b></p>
+    </div>
+
+    <div class="productt">
+      <div class="discount-badge">٪۱۵-</div>
+      <a href="/index12"><img src="https://footballkala.com/wp-content/uploads/2025/08/1034647_Main_2012866_result.jpg" alt="محصول 2"></a>
+      <h3>توپ فوتبال نایک کد 212</h3>
+      <p class="price"><span>۶۰۰,۰۰۰</span> <b>۴۹۰,۰۰۰ تومان</b></p>
+    </div>
+
+    <div class="productt">
+      <div class="discount-badge">٪۳۰-</div>
+      <a href="/index5"><img src="https://istgahevarzesh.com/wp-content/uploads/2020/07/tthre.jpg" alt="محصول 3"></a>
+      <h3>دمبل ۵ کیلویی کد 812</h3>
+      <p class="price"><span>۳۵۰,۰۰۰</span> <b>۲۸۰,۰۰۰ تومان</b></p>
+    </div>
+
+    <div class="productt">
+      <div class="discount-badge">٪۴۰-</div>
+      <a href="/index13"><img src="https://riboon.com/wp-content/uploads/2023/04/00301071-1.jpg" alt="محصول 4"></a>
+      <h3>تی‌شرت ورزشی نایک کد 207</h3>
+      <p class="price"><span>۵۰۰,۰۰۰</span> <b>۳۲۵,۰۰۰ تومان</b></p>
+    </div>
+
+    <div class="productt">
+      <div class="discount-badge">٪۱۸-</div>
+      <a href="/index14"><img src="https://dkstatics-public.digikala.com/digikala-products/931445422812ea853f03285183ba48f9d4ccf6a5_1660806665.jpg?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90" alt="محصول 5"></a>
+      <h3>بطری آب اسپرت 3 لیتری کد 101</h3>
+      <p class="price"><span>۲۸۰,۰۰۰</span> <b>۲۰۰,۰۰۰ تومان</b></p>
+    </div>
+    <div class="productt">
+      <div class="discount-badge">٪۲۳-</div>
+      <a href="/index15"><img src="https://onesport.ir/wp-content/uploads/2025/05/%D8%AA%D8%AE%D8%AA%D9%87-%DA%A9%D9%88%DA%86-%D9%81%D9%88%D8%AA%D8%A8%D8%A7%D9%84-1.jpg" alt="محصول 1"></a>
+      <h3>تخته مربیگری A60 کد 419</h3>
+      <p class="price"><span>۶۸۸,۰۰۰</span> <b>۵۳۲,۰۰۰۰</b></p>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="category-section">
+  <h2>دسته‌بندی‌ها</h2>
+  <div class="category-grid">
+    <a href="/m" class="category-circle">
+      <img src="https://gishasport.com/wp-content/uploads/2024/04/%DA%A9%D9%81%D8%B4-%D9%88%D8%B1%D8%B2%D8%B4%DB%8C-%D9%85%D8%B1%D8%AF%D8%A7%D9%86%D9%87-%D9%86%D8%A7%DB%8C%DA%A9-%D9%85%D8%AF%D9%84-ZOOMX-CK4318-%D9%85%D8%B4%DA%A9%DB%8C-1.jpg" alt="کفش">
+      <span style="font-weight: bold;">کفش</span>
+    </a>
+    <a href="/m" class="category-circle">
+      <img src="https://static.tagmond.com/attaches/attachments/004/821/859/medium/open-uri20211111-51969-1bf9ri4.jpg" alt="لباس">
+      <span style="font-weight: bold;">لباس</span>
+    </a>
+    <a href="/m" class="category-circle">
+      <img src="https://www.otag.ir/wp-content/uploads/2021/05/blog-small-spaces-01.jpg" alt="تجهیزات">
+      <span>تجهیزات</span>
+    </a>
+    <a href="/m" class="category-circle">
+      <img src="https://dkstatics-public.digikala.com/digikala-products/121669099.jpg?x-oss-process=image/resize,h_1600/quality,q_80" alt="وسایل ورزشی">
+      <span style="font-size: 13px;font-weight: bold;"">وسایل مربیگری</span>
+    </a>
+    <a href="/m" class="category-circle">
+      <img src="https://sportibash.com/uploads/products/947977.jpg" alt="لوازم جانبی">
+      <span style="font-weight: bold;">لوازم جانبی</span>
+    </a>
+    <a href="/m" class="category-circle">
+      <img src="https://www.iransporter.com/Uploads/9/9/4/bc8e04e6-62df-4277-9d2f-42a1e23c07b9.webp" alt="گجت‌ها">
+      <span style="font-weight: bold;">گجت‌ها</span>
+    </a>
+  </div>
+</section>
+
+  
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-column">
+      <h3>اسپرت کالا</h3>
+      <p>فروشگاه تخصصی لوازم ورزشی با بهترین قیمت و تضمین کیفیت. هدف ما، رساندن انرژی ورزش به خانه‌های شماست 💪</p>
+    </div>
+
+    <div class="footer-column">
+      <h4>دسترسی سریع</h4>
+      <ul>
+        <li><a href="/index">صفحه اصلی</a></li>
+        <li><a href="/m">محصولات</a></li>
+        <li><a href="/call with us">تماس با ما</a></li>
+        <li><a href="/h">درباره ما</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h4>پشتیبانی</h4>
+      <ul>
+        <li><a href="#">سؤالات متداول</a></li>
+        <li><a href="#">شرایط بازگشت کالا</a></li>
+        <li><a href="#">حریم خصوصی</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h4>ما را دنبال کنید</h4>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-telegram"></i></a>
+        <a href="#"><i class="fab fa-x-twitter"></i></a>
+      </div>
+      <form class="newsletter">
+        <input type="email" placeholder="ایمیل خود را وارد کنید">
+        <button>عضویت</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Sportkala. تمامی حقوق محفوظ است.</p>
+  </div>
+</footer>
+  <!-- 🎉 پیام عضویت موفق -->
+<div id="subscribe-message" class="subscribe-message">
+  با موفقیت در اسپرت کالا عضو شدید ! 🎉
+</div>
+</body>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const slides = document.querySelectorAll('.slide');
+let index = 0;
+
+function showSlide(i) {
+  slides.forEach(slide => slide.classList.remove('active'));
+  slides[i].classList.add('active');
+}
+
+function nextSlide() {
+  index = (index + 1) % slides.length;
+  showSlide(index);
+}
+
+function prevSlide() {
+  index = (index - 1 + slides.length) % slides.length;
+  showSlide(index);
+}
+
+document.querySelector('.next').addEventListener('click', nextSlide);
+document.querySelector('.prev').addEventListener('click', prevSlide);
+
+setInterval(nextSlide, 4000);
+});
+
+const menuBtn = document.getElementById('menuBtn'); const navMenu = document.getElementById('navMenu'); menuBtn.addEventListener('click', () => { navMenu.classList.toggle('active'); }); 
+  function showDiv() {
+  document.getElementById("content").innerHTML = 
+    '<iframe src="e.html" width="100%" height="400px" style="border:none;"></iframe>';
+}
+  window.addEventListener('DOMContentLoaded', () => {
+  const amazingOffers = document.querySelector('.amazing-offers');
+  setTimeout(() => {
+    amazingOffers.classList.add('show');
+  }, 200); // کمی تأخیر برای جلوه طبیعی
+});
+
+// تایمر ۲۴ ساعته با زمان رسمی ایران و قابلیت ریست دستی
+function startIranOfferTimer() {
+  const countdownEl = document.getElementById("countdown");
+  if (!countdownEl) return;
+
+  const iranOffset = 3.5 * 60 * 60 * 1000; // اختلاف زمانی ایران با UTC
+  const nowUTC = Date.now();
+  const nowIran = nowUTC + iranOffset;
+
+  const offerDuration = 48 * 60 * 60 * 1000; // ۲۴ ساعت به میلی‌ثانیه
+  let offerStart = localStorage.getItem("iranOfferStart");
+
+  // اگر مقدار قبلی معتبر نیست یا بیشتر از ۲۴ ساعت گذشته، مقدار جدید ذخیره کن
+  if (!offerStart || isNaN(Number(offerStart)) || nowIran - Number(offerStart) > offerDuration) {
+    offerStart = nowIran;
+    localStorage.setItem("iranOfferStart", offerStart);
+  } else {
+    offerStart = Number(offerStart);
+  }
+
+  const offerEnd = offerStart + offerDuration;
+
+  function updateCountdown() {
+    const currentIranTime = Date.now() + iranOffset;
+    let remaining = Math.floor((offerEnd - currentIranTime) / 1000);
+
+    if (remaining <= 0) {
+      remaining = 0;
+      clearInterval(timerInterval);
+      localStorage.removeItem("iranOfferStart");
+      // تایمر متوقف می‌شود، اما ریست نمی‌شود مگر اینکه خودت resetIranOfferTimer() را صدا بزنی
+    }
+
+    const hours = Math.floor(remaining / 3600);
+    const minutes = Math.floor((remaining % 3600) / 60);
+    const seconds = remaining % 60;
+
+    // تبدیل به عدد فارسی
+    const toPersian = (num) =>
+      num.toString().padStart(2, '0').replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+
+    countdownEl.textContent = `${toPersian(hours)}:${toPersian(minutes)}:${toPersian(seconds)}`;
+  }
+
+  updateCountdown();
+  const timerInterval = setInterval(updateCountdown, 1000);
+}
+
+// تابع دستی برای ریست یا تمدید تایمر از طریق کد
+function resetIranOfferTimer(hoursFromNow = 0) {
+  const iranOffset = 3.5 * 60 * 60 * 1000;
+  const newStart = Date.now() + iranOffset + hoursFromNow * 60 * 60 * 1000;
+  localStorage.setItem("iranOfferStart", newStart);
+  startIranOfferTimer();
+}
+
+// اجرای اولیه تایمر هنگام بارگذاری صفحه
+document.addEventListener("DOMContentLoaded", startIranOfferTimer);
+document.addEventListener("DOMContentLoaded", () => {
+const stories = document.querySelectorAll('.story');
+const storyModal = document.getElementById('storyModal');
+const storyVideo = document.getElementById('storyVideo');
+const userAvatar = document.querySelector('.user-avatar');
+const userName = document.querySelector('.user-name');
+const storyDesc = document.querySelector('.story-desc');
+const closeModal = document.getElementById('closeModal');
+const likeBtn = document.querySelector('.like-btn');
+const likeCount = document.querySelector('.like-count'); // span زیر قلب
+const muteBtn = document.querySelector('.mute-btn');
+const followBtn = document.getElementById('followBtn');
+const heartPopup = document.getElementById('heartPopup');
+
+// 💾 حافظه لایک و دنبال کردن
+let likesState = JSON.parse(localStorage.getItem('likesState')) || {};
+let likesCount = JSON.parse(localStorage.getItem('likesCount')) || {};
+let followState = JSON.parse(localStorage.getItem('followState')) || {};
+
+// 🔢 تبدیل اعداد به فارسی
+function toPersianNumber(num) {
+  const persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+  return num.toString().replace(/\d/g, x => persianDigits[x]);
+}
+
+// باز کردن استوری
+stories.forEach((story, index) => {
+  if (!(index in likesState)) likesState[index] = false;
+  if (!(index in likesCount)) likesCount[index] = 0;
+  if (!(index in followState)) followState[index] = false;
+
+  story.addEventListener('click', () => {
+    const videoSrc = story.getAttribute('data-video');
+    const profileSrc = story.getAttribute('data-profile');
+    const name = story.getAttribute('data-name');
+    const desc = story.getAttribute('data-desc');
+
+    storyVideo.src = videoSrc;
+    userAvatar.src = profileSrc;
+    userName.textContent = name;
+    storyDesc.textContent = desc;
+    storyModal.style.display = 'flex';
+    storyVideo.muted = false;
+    muteBtn.textContent = '🔊';
+    storyVideo.loop = true; // 🔁 لوپ
+    storyVideo.play();
+    storyModal.setAttribute('data-current-index', index);
+
+    // ❤️ وضعیت لایک و نمایش تعداد فارسی
+    likeBtn.textContent = likesState[index] ? '❤️' : '🤍';
+    likeCount.textContent = toPersianNumber(likesCount[index]);
+
+    // 🟢 وضعیت دنبال کردن
+    followBtn.textContent = followState[index] ? 'دنبال شد' : 'دنبال کردن';
+    followBtn.classList.toggle('followed', followState[index]);
+  });
+});
+
+// ❌ بستن استوری
+closeModal.addEventListener('click', () => {
+  storyModal.style.display = 'none';
+  storyVideo.pause();
+});
+
+// ❤️ لایک با پاپ‌آپ قلب و شمارش فارسی
+likeBtn.addEventListener('click', () => {
+  const currentIndex = storyModal.getAttribute('data-current-index');
+
+  likesState[currentIndex] = !likesState[currentIndex];
+  if (likesState[currentIndex]) {
+    likesCount[currentIndex]++;
+  } else {
+    likesCount[currentIndex] = Math.max(0, likesCount[currentIndex] - 1);
+  }
+
+  // نمایش ❤️ و تعداد فارسی
+  likeBtn.textContent = likesState[currentIndex] ? '❤️' : '🤍';
+  likeCount.textContent = toPersianNumber(likesCount[currentIndex]);
+
+  localStorage.setItem('likesState', JSON.stringify(likesState));
+  localStorage.setItem('likesCount', JSON.stringify(likesCount));
+
+  // پاپ‌آپ قلب وسط صفحه
+  heartPopup.classList.add('show');
+  setTimeout(() => heartPopup.classList.remove('show'), 600);
+});
+
+// 🔇 کنترل صدا
+muteBtn.addEventListener('click', () => {
+  storyVideo.muted = !storyVideo.muted;
+  muteBtn.textContent = storyVideo.muted ? '🔇' : '🔊';
+});
+
+// 🟢 دنبال کردن / دنبال شد
+followBtn.addEventListener('click', () => {
+  const currentIndex = storyModal.getAttribute('data-current-index');
+  followState[currentIndex] = !followState[currentIndex];
+  localStorage.setItem('followState', JSON.stringify(followState));
+
+  followBtn.textContent = followState[currentIndex] ? 'دنبال شد' : 'دنبال کردن';
+  followBtn.classList.toggle('followed', followState[currentIndex]);
+});
+
+
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  const amazingOffers = document.querySelector('.amazing-offers');
+  setTimeout(() => {
+    amazingOffers.classList.add('show');
+  }, 200); // کمی تأخیر برای جلوه طبیعی
+});
+    const subscribeBtn = document.querySelector(".newsletter button");
+    const subscribeMessage = document.getElementById("subscribe-message");
+
+    subscribeBtn.addEventListener("click", (e) => {
+      e.preventDefault(); // جلوگیری از رفرش صفحه
+
+      // نمایش پیام
+      subscribeMessage.classList.add("show");
+
+      // بعد از 3 ثانیه پنهان شود
+      setTimeout(() => {
+        subscribeMessage.classList.remove("show");
+      }, 3000);
+    });
+/* المان‌ها */
+const chatCircle = document.getElementById('chat-circle');
+const chatWindow = document.getElementById('chat-window');
+const chatClose = document.getElementById('chat-close');
+const chatAudio = document.getElementById('chat-audio');
+const sendBtn = document.getElementById('send-btn');
+const chatBody = document.getElementById('chat-body');
+const chatInput = document.querySelector('#chat-input input');
+
+/* باز شدن و بستن */
+chatCircle.addEventListener('click', () => {
+  chatWindow.style.display = 'flex';
+  if (chatAudio && chatAudio.paused) {
+    chatAudio.currentTime = 0;
+    chatAudio.play().catch(()=>console.log('Autoplay blocked'));
+  }
+});
+chatClose.addEventListener('click', () => {
+  chatWindow.style.display = 'none';
+  if (chatAudio) { chatAudio.pause(); chatAudio.currentTime = 0; }
+});
+
+/* تابع کمکی برای ساخت هدر بات (لوگو + اسم) */
+function createBotHeader() {
+  const header = document.createElement('div');
+  header.classList.add('bot-header');
+
+  const img = document.createElement('img');
+  img.src = '/static/Siria2.png'; // مسیر لوگو
+  img.alt = 'Siria';
+
+  const name = document.createElement('div');
+  name.classList.add('bot-name');
+
+
+  // لوگو سمت چپ به‌خاطر جهت متن فارسی، اما خودش بصورت چپ‌چین نمایش داده می‌شود
+  header.appendChild(img);
+  header.appendChild(name);
+  return header;
+}
+
+/* تابع ساخت لودر (بیرون از حباب) */
+function createLoaderElement() {
+  const loaderWrap = document.createElement('div');
+  loaderWrap.classList.add('bot-loader');
+
+  const dots = document.createElement('div');
+  dots.classList.add('loader-dots');
+  dots.innerHTML = '<span></span><span></span><span></span>';
+
+  loaderWrap.appendChild(dots);
+  return loaderWrap;
+}
+
+/* تابع ساخت حباب پیام بات با متن مشخص */
+function createBotBubble(text) {
+  const bubble = document.createElement('div');
+  bubble.classList.add('message','bot');
+  // اگر متن شامل HTML باشد از innerHTML استفاده کن، در غیر اینصورت textContent امن‌تر است
+  bubble.innerHTML = `<div class="bot-text">${text}</div>`;
+  return bubble;
+}
+
+/* ارسال پیام */
+sendBtn.addEventListener('click', async () => {
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+
+  // 1) پیام کاربر (همان شکل قبلی)
+  const userMsg = document.createElement('div');
+  userMsg.classList.add('message','user');
+  userMsg.textContent = msg;
+  chatBody.appendChild(userMsg);
+  chatInput.value = '';
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  // 2) هدر بات (لوگو + اسم) - بالای پاسخ
+  const botHeader = createBotHeader();
+  chatBody.appendChild(botHeader);
+
+  // 3) لودر (بیرون از حباب)
+  const loader = createLoaderElement();
+  chatBody.appendChild(loader);
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ message: msg })
+    });
+    const data = await res.json();
+
+    // 4) حذف لودر و اضافه کردن حباب پاسخ بات
+    if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+
+    const botBubble = createBotBubble(data.reply || 'اوه! مشکلی پیش اومده 😔');
+    chatBody.appendChild(botBubble);
+  } catch (err) {
+    if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+    const botBubble = createBotBubble('اوه! مشکلی پیش اومده 😔');
+    chatBody.appendChild(botBubble);
+  }
+
+  chatBody.scrollTop = chatBody.scrollHeight;
+});
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const chatCircle = document.getElementById('chat-circle');
+
+    // نیم ثانیه بعد از لود، نیم‌دایره باز شود و متن ظاهر شود
+    setTimeout(() => {
+      chatCircle.classList.add('expanded');
+    }, 500);
+
+    // بعد از 3 ثانیه، دوباره جمع شود و فقط لوگو باقی بماند
+    setTimeout(() => {
+      chatCircle.classList.remove('expanded');
+    }, 2500);
+  });
+
+    chatCircle.classList.add('fade-in');
+    logoImg.classList.add('fade-in');
+</script>
+</body>
+</html>

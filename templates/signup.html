@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت‌نام</title>
+    <link rel="stylesheet" href="/static/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <h2>ثبت‌نام</h2>
+
+        <!-- نمایش پیام‌های flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="/signup" method="POST">
+            <input type="text" name="username" style="font-family: 'Vazirmatn', sans-serif;" placeholder="نام و نام خانوادگی" required>
+            <input type="email" name="email" style="font-family: 'Vazirmatn', sans-serif;"  placeholder="ایمیل" required>
+            <input type="password" name="password" style="font-family: 'Vazirmatn', sans-serif;"  placeholder="رمز عبور" required>
+            <button type="submit" style="font-family: 'Vazirmatn', sans-serif;" >ثبت‌نام</button>
+        </form>
+
+        <p>قبلاً ثبت‌نام کرده‌اید؟ <a href="/login">ورود</a></p>
+    </div>
+</body>
+</html>

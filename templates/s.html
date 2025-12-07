@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اسپرت کالا - سیریا چت‌بات</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+* {
+  margin: 0;
+  box-sizing: border-box;
+  outline: none;
+  font-family: 'Vazirmatn', sans-serif;
+}
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f5f5f5;
+}
+
+/* نیم‌دایره سمت چپ */
+#chat-circle {
+  position: fixed;
+  bottom: 110px;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #9b59b6, #e91e63);
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  z-index: 9999;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+#chat-circle:active { cursor: grabbing; }
+#chat-circle img {
+  width: 45px;
+  height: 45px;
+}
+
+/* پنجره چت */
+#chat-window {
+  display: none;
+  position: fixed;
+  bottom: 100px;
+  left: 70px;
+  width: 370px;
+  max-width: 90%;
+  height: 500px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9998;
+  animation: fadeIn 0.3s ease;
+}
+
+/* انیمیشن باز شدن */
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(50px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* هدر چت */
+#chat-header {
+  background: linear-gradient(135deg, #9b59b6, #e91e63);
+  color: white;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* بدنه چت */
+#chat-body {
+  padding: 15px;
+  height: calc(100% - 110px);
+  overflow-y: auto;
+  background: #fefefe;
+}
+
+/* پیام‌ها */
+.message.bot {
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  max-width: 75%;
+}
+
+.message.user {
+  background: #e91e63;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  max-width: 75%;
+  text-align: right;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* ورودی پیام */
+#chat-input {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+#chat-input input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  border-radius: 0 0 0 15px;
+}
+
+#chat-input button {
+  background: linear-gradient(135deg, #9b59b6, #e91e63);
+  color: white;
+  border: none;
+  padding: 0 20px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 0 0 15px 0;
+}
+
+/* 🌈 نوشته قدرت گرفته از ایلیا */
+.powered-by {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 0;
+  background: linear-gradient(90deg, #5964b6, #e91e63);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glow 2s infinite alternate;
+  text-shadow: 0 0 10px rgba(233, 30, 99, 0.8),
+               0 0 20px rgba(155, 89, 182, 0.8),
+               0 0 30px rgba(233, 30, 99, 0.5);
+  border-bottom: 1px solid #eee;
+}
+
+/* واکنش‌گرایی */
+@media screen and (max-width: 900px) {
+  #chat-window {
+    width: 90%;
+    height: 60%;
+    left: 5%;
+    bottom: 170px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- نیم‌دایره سمت چپ -->
+<div id="chat-circle">
+  <img src="/static/siria.png" alt="Geneni" id="chat-icon">
+</div>
+
+<!-- پنجره چت -->
+<div id="chat-window">
+  <div id="chat-header">
+    <span>سیریا - دستیار اسپرت کالا</span>
+    <button id="chat-close">✖</button>
+  </div>
+  <div class="powered-by">قدرت گرفته از ایلیا</div>
+  <div id="chat-body">
+    <div class="message bot">سلام! من سیریام 😊 آماده‌ام بهت در خرید بهترین تجهیزات اسپرت کمک کنم!</div>
+  </div>
+  <div id="chat-input">
+    <input type="text" placeholder="پیام خود را بنویسید...">
+    <button id="send-btn">ارسال</button>
+  </div>
+</div>
+
+<!-- JS -->
+<script>
+const chatCircle = document.getElementById('chat-circle');
+const chatWindow = document.getElementById('chat-window');
+const chatClose = document.getElementById('chat-close');
+const sendBtn = document.getElementById('send-btn');
+const chatBody = document.getElementById('chat-body');
+const chatInput = document.querySelector('#chat-input input');
+
+// باز کردن و بستن چت
+chatCircle.addEventListener('click', () => { chatWindow.style.display = 'flex'; });
+chatClose.addEventListener('click', () => { chatWindow.style.display = 'none'; });
+
+// ارسال پیام و گرفتن پاسخ واقعی از سرور
+sendBtn.addEventListener('click', async () => {
+  const msg = chatInput.value.trim();
+  if(!msg) return;
+
+  const userMsg = document.createElement('div');
+  userMsg.classList.add('message', 'user');
+  userMsg.textContent = msg;
+  chatBody.appendChild(userMsg);
+  chatInput.value = '';
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  // پیام به سرور
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: msg })
+    });
+    const data = await res.json();
+    const botMsg = document.createElement('div');
+    botMsg.classList.add('message', 'bot');
+    botMsg.textContent = data.reply;
+    chatBody.appendChild(botMsg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  } catch(err) {
+    const botMsg = document.createElement('div');
+    botMsg.classList.add('message', 'bot');
+    botMsg.textContent = "اوه! مشکلی پیش اومده 😔";
+    chatBody.appendChild(botMsg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+});
+
+// قابلیت کشیدن نیم‌دایره (drag)
+let isDragging = false, offsetX, offsetY;
+chatCircle.addEventListener('mousedown', e => { isDragging = true; offsetX = e.clientX - chatCircle.offsetLeft; offsetY = e.clientY - chatCircle.offsetTop; });
+document.addEventListener('mousemove', e => { if(isDragging){ chatCircle.style.left = (e.clientX - offsetX) + 'px'; chatCircle.style.top = (e.clientY - offsetY) + 'px'; } });
+document.addEventListener('mouseup', () => { isDragging = false; });
+</script>
+
+</body>
+</html>

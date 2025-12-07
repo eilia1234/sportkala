@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لیست محصولات |فروشگاه اسپرت کالا</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      outline: none;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #333;
+      direction: rtl;
+    }
+
+    header {
+      background: #b10303;
+      color: #fff;
+      padding: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      /* ✅ جدید برای ثابت ماندن هنگام اسکرول */
+      position: sticky;
+      top: 0px;
+      align-self: flex-start;
+      z-index: 50;
+    }
+
+    header input {
+      padding: 10px 13px;
+      border-radius: 8px;
+      border: none;
+      width: 280px;
+      max-width: 90%;
+    }
+
+    /* ==== Layout ==== */
+    .container {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      flex-wrap: wrap;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    aside {
+      background: #fff;
+      padding: 15px;
+      width: 260px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      height: fit-content;
+      order: 2; /* در دسکتاپ راست */
+    }
+
+    /* ==== Product Card ==== */
+    .product {
+      background: #fff;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: 0.3s;
+      gap: 20px;
+    }
+
+    .product:hover {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+
+    .product img {
+      width: 180px;
+      height: 180px;
+      object-fit: contain;
+      border-radius: 8px;
+      order: 1; /* عکس سمت چپ */
+    }
+
+    .product-info {
+      flex: 1;
+      order: 0; /* توضیحات سمت راست */
+    }
+
+    .product-info h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .price {
+      color: #ef394e;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .rating {
+      color: #ff9800;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    /* ==== Filters ==== */
+    .filter-section {
+      margin-bottom: 20px;
+      
+    }
+
+    select, input[type=range] {
+      width: 100%;
+      padding: 6px;
+      margin-top: 5px;
+    }
+#chat-circle {
+  position: fixed;
+  bottom: 100px;
+  left: 0;
+  width: 52px;
+  height: 46px;
+  background: linear-gradient(114deg, #8f4aec, #2586ff);
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  z-index: 9999;
+  cursor: grab;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: width 0.8s ease;
+}
+#chat-circle:active { cursor: grabbing; }
+#chat-circle img {
+  width: 54px;
+  height: 54px;
+}
+.circle-content {
+  display: flex;
+  align-items: center;
+  padding-left: 100px;
+  position: relative;
+}
+
+.chat-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  z-index: 2; /* لوگو همیشه جلو */
+  transition: transform 0.8s ease;
+}
+
+.chat-text {
+  position: absolute;
+  left: 10px; /* پشت لوگو شروع شود */
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.5s ease, left 0.8s ease;
+  z-index: 1; /* متن پشت لوگو */
+}
+
+/* حالت باز شدن */
+#chat-circle.expanded {
+  width:170px;
+}
+
+#chat-circle.expanded .chat-text {
+  opacity: 1;
+  right: 35px; /* متن آرام پشت لوگو حرکت کند */
+}
+
+#chat-circle.expanded .chat-logo {
+  transform: translateX(60px); /* لوگو جلو برود */
+}
+
+/* پنجره چت */
+#chat-window {
+  display: none;
+  position: fixed;
+  bottom: 150px;
+  left: 70px;
+  width: 480px;
+  max-width: 90%;
+  height: 500px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9998;
+  animation: fadeIn 0.3s ease;
+}
+
+/* انیمیشن باز شدن */
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(50px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+/* هدر چت */
+#chat-header {
+  background: linear-gradient(135deg, #c92944, #a21ee9);
+  color: white;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* بدنه چت */
+#chat-body {
+  padding: 15px;
+  height: calc(100% - 110px);
+  overflow-y: auto;
+  background: #fefefe;
+}
+
+.bot-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 6px 0;
+  max-width: 75%;
+  align-self: flex-start;
+}
+
+.bot-header img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.bot-header .bot-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+/* پیام سیریا سمت چپ */
+.message.bot {
+  background: #f1f0f0;
+  color: #222;
+  border-radius: 12px;
+  padding: 10px 14px;
+  max-width: 75%;
+  align-self: flex-start;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+/* لودر سه نقطه بیرون از کادر پیام */
+.bot-loader {
+  display: inline-block;
+  margin: 0 3px 6px 8px;
+  align-self: flex-start;
+}
+
+.loader-dots {
+  display: inline-block;
+  vertical-align: middle;
+  width: 42px;
+  text-align: center;
+}
+.loader-dots span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin: 0 2px;
+  background: linear-gradient(135deg, #c92944, #a21ee9);;
+  border-radius: 50%;
+  animation: blink 1.2s infinite ease-in-out;
+  opacity: 0.4;
+}
+.loader-dots span:nth-child(2) { animation-delay: 0.18s; }
+.loader-dots span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes blink {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.message.user {
+  background: #b029baf0;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  max-width: 75%;
+  text-align: right;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* ورودی پیام */
+#chat-input {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+#chat-input input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  border-radius: 0 0 0 15px;
+}
+
+#chat-input button {
+  background: linear-gradient(135deg, #9b59b6, #e91e63);
+  color: white;
+  border: none;
+  padding: 0 20px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 0 0 15px 0;
+}
+
+/* 🌈 نوشته قدرت گرفته از ایلیا */
+.powered-by {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 0;
+  background: linear-gradient(90deg, #5964b6, #e91e63);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glow 2s infinite alternate;
+  text-shadow: 0 0 10px rgba(233, 30, 99, 0.8),
+               0 0 20px rgba(155, 89, 182, 0.8),
+               0 0 30px rgba(233, 30, 99, 0.5);
+  border-bottom: 1px solid #eee;
+}
+/* انیمیشن fade-in */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInAnim 1s forwards;
+}
+
+@keyframes fadeInAnim {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* واکنش‌گرایی */
+@media screen and (max-width: 900px) {
+  #chat-window {
+    width: 90%;
+    height: 60%;
+    left: 5%;
+    bottom: 95px;
+  }
+  #chat-circle{
+    bottom: 5%;
+    height: 46px;
+    width: 46px;
+  }
+  #chat-circle img {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media(max-width: 789px) {
+  .container {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  aside {
+    width: 100%;
+    order: 1; 
+    text-align: right;        /* متن‌ها راست‌چین */
+/* محتوای داخل aside سمت راست */
+    padding: 17px 20px;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    order: 2;
+    width: 100%;
+  }
+
+  .product {
+    flex-direction: column;
+    align-items: flex-end;    /* متن و عکس سمت راست */
+    text-align: right;
+    width: 100%;
+  }
+
+  .product img {
+    width: 200px;
+    height: 200px;
+    margin-left: 0;
+  }
+
+  .product-info {
+    width: 100%;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;   /* عناصر هدر سمت راست */
+    width: 100%;
+    padding: 10px 20px;
+    box-sizing: border-box;
+  }
+
+  header input {
+    width: 90%;
+    padding: 8px;
+    margin-top: 12px;
+  }
+}
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1> اسپــرت کـالا</h1>
+    <input type="text" id="search" placeholder="جستجو در محصولات..." />
+  </header>
+<!-- نیم‌دایره سمت چپ -->
+
+<div id="chat-circle">
+  <div class="circle-content">
+    <img src="/static/siria3.png" alt="Siria Logo" class="chat-logo">
+    <span class="chat-text">دستیار اسپرت کالا</span>
+  </div>
+</div>
+
+
+<div id="chat-window">
+  <div id="chat-header">
+    <span>سیریا - دستیار اسپرت کالا</span>
+    <button id="chat-close">✖</button>
+  </div>
+  <div class="powered-by">قدرت گرفته از ایلیا ✨</div>
+  <div id="chat-body">
+    <div class="message bot"><p>سلام! من سیریا هستم 😊</p>
+       <p><br>دستیار هوش مصنوعی اسپرت کالا !</p><br>اگر سوالی درباره خرید یا محصولات داری کد یا نام محصول رو وارد کنم. در ضمن به به سوالات دیگه هم پاسخ میدم😉</div>
+  </div>
+  <div id="chat-input">
+    <input type="text" placeholder="از سیریا بپرس....">
+    <button id="send-btn">ارسال</button>
+  </div>
+  <audio id="chat-audio" src="/static/صوت 4.mp3" preload="auto"></audio>
+</div>
+
+  <div class="container">
+    <main id="productList">
+      <div class="product" data-price="1200000" data-brand="کفش">
+        <div class="product-info">
+          <h2>کفش فوتبال حرفه‌ای کد 201👟⚽ </h2>
+          <p class="price">۱,۲۰۰,۰۰۰ تومان</p>
+          <p class="rating">⭐ ۴.۵ (۱۲۰ نظر)</p>
+        </div>
+        <a href="/index3"><img src="/static/استوک.jpg" alt="فوتبال"></a>
+      </div>
+
+      <div class="product" data-price="200000" data-brand="دمبل ها">
+        <div class="product-info">
+          <h2>دمبل ۵ کیلیویی حرفه‌ای  کد 812🏋️‍♂️</h2>
+          <p class="price">۲۸۰,۰۰۰ تومان</p>
+          <p class="rating">⭐ ۴.۳ (۳۵۰ نظر)</p>
+        </div>
+        <a href="/index5"><img src="/static/دمبل1.jpg" alt="دمبل"></a>
+      </div>
+
+      <div class="product" data-price="500000" data-brand="توپ ها">
+        <div class="product-info">
+          <h2>توپ فوتبال ادیداس مدل EURO2024  کد 202⚽🏐</h2>
+          <p class="price">۵۰۰,۰۰۰ تومان</p>
+          <p class="rating">⭐ ۴.۸ (۵۴۰ نظر)</p>
+        </div>
+        <a href="/index4"><img src="/static/توپ.jpg" alt="توپ"></a>
+      </div>
+
+      <div class="product" data-price="700000" data-brand="راکت ها">
+        <div class="product-info">
+          <h2>راکت بدمینتون fox مدل x456  کد 409🏸</h2>
+          <p class="price">۷۰۰,۰۰۰ تومان</p>
+          <p class="rating">⭐ ۴.۷ (۲۲۰ نظر)</p>
+        </div>
+        <a href="/index8"><img src="/static/بد.jpg" alt="بدمینتون"></a>
+      </div>
+      <div class="product" data-price="200000" data-brand="کوله ها">
+        <div class="product-info">
+          <h2>کیف ورزشی  کد 405🎒</h2>
+          <p class="price">۲۰۰٬۰۰۰ تومان</p>
+          <p class="rating">⭐ ۴.۲ (۱۰۰ نظر)</p>
+        </div>
+        <a href="index6"><img src="/static/کوله.jpg" alt="کوله ورزشی"></a>
+      </div>
+      <div class="product" data-price="180000" data-brand="سایر">
+        <div class="product-info">
+          <h2>بطری آب ورزشی ۱.۵ لیتری کد 303💧</h2>
+          <p class="price">۱۸۰٬۰۰۰  تومان</p>
+          <p class="rating">⭐ ۳.۹ (۹۵ نظر)</p>
+        </div>
+        <a href="/index7"><img src="/static/قمقمه.jpg" alt="فمقمه"></a>
+      </div>
+      <div class="product" data-price="998000" data-brand="البسه">
+        <div class="product-info">
+          <h2>کیت ورزشی بارسلونا 👕 کد 802</h2>
+          <p class="price">۹۹۸,۰۰۰  تومان</p>
+          <p class="rating">⭐ ۴.۹ (۳۰۰ نظر)</p>
+        </div>
+        <a href="/index9"><img src="https://dkstatics-public.digikala.com/digikala-products/770d80bb2b6692420acacee81186edf1eddeb41e_1687703979.jpg?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90" alt="کیت"></a>
+      </div>
+      <div class="product" data-price="2367000" data-brand="سایر">
+        <div class="product-info">
+          <h2>ساعت ورزشی هوشمند کد 890 ⌚</h2>
+          <p class="price">۲,۳۶۷,۰۰۰  تومان</p>
+          <p class="rating">⭐ ۵ (۱۶۲ نظر)</p>
+        </div>
+        <a href="/index10"><img src="https://dkstatics-public.digikala.com/digikala-products/0d53c9c26a4bb827b4548bb36858657837dcb608_1686672372.jpg?x-oss-process=image/resize,m_lfit,h_800,w_800/format,webp/quality,q_90" alt="ساعت"></a>
+      </div>
+      <div class="product" data-price="998000" data-brand="کفش">
+        <div class="product-info">
+          <h2>کفش ورزشی مردانه کد 105 👟</h2>
+          <p class="price">۹۹۸,۰۰۰  تومان</p>
+          <p class="rating">⭐ ۳,۸ (۳۰ نظر)</p>
+        </div>
+        <a href="/index11"><img src="https://gishasport.com/wp-content/uploads/2024/04/%DA%A9%D9%81%D8%B4-%D9%88%D8%B1%D8%B2%D8%B4%DB%8C-%D9%85%D8%B1%D8%AF%D8%A7%D9%86%D9%87-%D9%86%D8%A7%DB%8C%DA%A9-%D9%85%D8%AF%D9%84-ZOOMX-CK4318-%D9%85%D8%B4%DA%A9%DB%8C-1.jpg" alt="کفش 2"></a>
+      </div>
+      <div class="product" data-price="490000" data-brand="توپ ها">
+        <div class="product-info">
+          <h2>توپ فوتبال نایک کد 212🏐</h2>
+          <p class="price">۴۹۰,۰۰۰  تومان</p>
+          <p class="rating">⭐ ۴,۲ (۷۳ نظر)</p>
+        </div>
+        <a href="/index12"><img src="https://footballkala.com/wp-content/uploads/2025/08/1034647_Main_2012866_result.jpg" alt="توپ 2"></a>
+      </div>
+      <div class="product" data-price="325000" data-brand="البسه">
+        <div class="product-info">
+          <h2>تی‌شرت ورزشی نایک کد 207 👕</h2>
+          <p class="price">۳۲۵,۰۰۰   تومان</p>
+          <p class="rating">⭐ ۳,۵ (۲۸ نظر)</p>
+        </div>
+        <a href="/index13"><img src="https://riboon.com/wp-content/uploads/2023/04/00301071-1.jpg" alt="تی شرت"></a>
+      </div>
+      <div class="product" data-price="200000" data-brand="سایر">
+        <div class="product-info">
+          <h2>بطری آب اسپرت 3 لیتری کد 330 🍾</h2>
+          <p class="price">۲۰۰,۰۰۰ تومان</p>
+          <p class="rating">⭐ ۴,۱ (۵۸ نظر)</p>
+        </div>
+        <a href="/index14"><img src="https://dkstatics-public.digikala.com/digikala-products/931445422812ea853f03285183ba48f9d4ccf6a5_1660806665.jpg?x-oss-process=image/resize,m_lfit,h_800,w_800/quality,q_90" alt="بظری اب"></a>
+      </div>
+      <div class="product" data-price="532000" data-brand="سایر">
+        <div class="product-info">
+          <h2>تخته مربیگری A60 کد 419 ⛳</h2>
+          <p class="price">۵۳۲,۰۰۰۰ تومان</p>
+          <p class="rating">⭐ ۳,۴ (۱۱۶ نظر)</p>
+        </div>
+        <a href="/index15"><img src="https://onesport.ir/wp-content/uploads/2025/05/%D8%AA%D8%AE%D8%AA%D9%87-%DA%A9%D9%88%DA%86-%D9%81%D9%88%D8%AA%D8%A8%D8%A7%D9%84-1.jpg" alt="تخته کوچ"></a>
+      </div>
+    </main>
+
+    <aside>
+      <h3>فیلترها</h3>
+
+      <div class="filter-section">
+        <h4>قیمت</h4>
+        <input type="range" id="priceRange" min="0" max="10000000" step="500000" value="10000000" />
+        <span id="priceValue">حداکثر ۱۰,۰۰۰,۰۰۰ تومان</span>
+      </div>
+
+      <div class="filter-section">
+        <h4>برند</h4>
+        <label><input type="checkbox" class="brand-filter" value="کفش"> کفش </label><br>
+        <label><input type="checkbox" class="brand-filter" value="دمبل ها">  دمبل ها </label><br>
+        <label><input type="checkbox" class="brand-filter" value="توپ ها"> توپ ها</label><br>
+        <label><input type="checkbox" class="brand-filter" value="البسه"> البسه </label><br>
+        <label><input type="checkbox" class="brand-filter" value="سایر"> سایر </label>
+      </div>
+
+      <div class="filter-section">
+        <h4>مرتب‌سازی</h4>
+        <select id="sortSelect">
+          <option value="default">مرتب‌سازی</option>
+          <option value="low">ارزان‌ترین</option>
+          <option value="high">گران‌ترین</option>
+        </select>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('search');
+    const priceRange = document.getElementById('priceRange');
+    const priceValue = document.getElementById('priceValue');
+    const brandFilters = document.querySelectorAll('.brand-filter');
+    const sortSelect = document.getElementById('sortSelect');
+    const products = Array.from(document.querySelectorAll('.product'));
+    const productList = document.getElementById('productList');
+
+    function filterProducts() {
+      const searchText = searchInput.value.toLowerCase();
+      const maxPrice = parseInt(priceRange.value);
+      const selectedBrands = Array.from(brandFilters)
+        .filter(b => b.checked)
+        .map(b => b.value);
+
+      let filtered = products.filter(p => {
+        const name = p.querySelector('h2').textContent.toLowerCase();
+        const price = parseInt(p.dataset.price);
+        const brand = p.dataset.brand;
+        const matchSearch = name.includes(searchText);
+        const matchPrice = price <= maxPrice;
+        const matchBrand = selectedBrands.length ? selectedBrands.includes(brand) : true;
+        return matchSearch && matchPrice && matchBrand;
+      });
+
+      const sortValue = sortSelect.value;
+      if (sortValue === 'low') filtered.sort((a, b) => a.dataset.price - b.dataset.price);
+      else if (sortValue === 'high') filtered.sort((a, b) => b.dataset.price - a.dataset.price);
+
+      productList.innerHTML = '';
+      filtered.forEach(p => productList.appendChild(p));
+    }
+
+    searchInput.addEventListener('input', filterProducts);
+    priceRange.addEventListener('input', () => {
+      priceValue.textContent = `حداکثر ${Number(priceRange.value).toLocaleString()} تومان`;
+      filterProducts();
+    });
+    brandFilters.forEach(b => b.addEventListener('change', filterProducts));
+    sortSelect.addEventListener('change', filterProducts);
+
+/* المان‌ها */
+const chatCircle = document.getElementById('chat-circle');
+const chatWindow = document.getElementById('chat-window');
+const chatClose = document.getElementById('chat-close');
+const chatAudio = document.getElementById('chat-audio');
+const sendBtn = document.getElementById('send-btn');
+const chatBody = document.getElementById('chat-body');
+const chatInput = document.querySelector('#chat-input input');
+
+/* باز شدن و بستن */
+chatCircle.addEventListener('click', () => {
+  chatWindow.style.display = 'flex';
+  if (chatAudio && chatAudio.paused) {
+    chatAudio.currentTime = 0;
+    chatAudio.play().catch(()=>console.log('Autoplay blocked'));
+  }
+});
+chatClose.addEventListener('click', () => {
+  chatWindow.style.display = 'none';
+  if (chatAudio) { chatAudio.pause(); chatAudio.currentTime = 0; }
+});
+
+/* تابع کمکی برای ساخت هدر بات (لوگو + اسم) */
+function createBotHeader() {
+  const header = document.createElement('div');
+  header.classList.add('bot-header');
+
+  const img = document.createElement('img');
+  img.src = '/static/Siria2.png'; // مسیر لوگو
+  img.alt = 'Siria';
+
+  const name = document.createElement('div');
+  name.classList.add('bot-name');
+
+
+  // لوگو سمت چپ به‌خاطر جهت متن فارسی، اما خودش بصورت چپ‌چین نمایش داده می‌شود
+  header.appendChild(img);
+  header.appendChild(name);
+  return header;
+}
+
+/* تابع ساخت لودر (بیرون از حباب) */
+function createLoaderElement() {
+  const loaderWrap = document.createElement('div');
+  loaderWrap.classList.add('bot-loader');
+
+  const dots = document.createElement('div');
+  dots.classList.add('loader-dots');
+  dots.innerHTML = '<span></span><span></span><span></span>';
+
+  loaderWrap.appendChild(dots);
+  return loaderWrap;
+}
+
+/* تابع ساخت حباب پیام بات با متن مشخص */
+function createBotBubble(text) {
+  const bubble = document.createElement('div');
+  bubble.classList.add('message','bot');
+  // اگر متن شامل HTML باشد از innerHTML استفاده کن، در غیر اینصورت textContent امن‌تر است
+  bubble.innerHTML = `<div class="bot-text">${text}</div>`;
+  return bubble;
+}
+
+/* ارسال پیام */
+sendBtn.addEventListener('click', async () => {
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+
+  // 1) پیام کاربر (همان شکل قبلی)
+  const userMsg = document.createElement('div');
+  userMsg.classList.add('message','user');
+  userMsg.textContent = msg;
+  chatBody.appendChild(userMsg);
+  chatInput.value = '';
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  // 2) هدر بات (لوگو + اسم) - بالای پاسخ
+  const botHeader = createBotHeader();
+  chatBody.appendChild(botHeader);
+
+  // 3) لودر (بیرون از حباب)
+  const loader = createLoaderElement();
+  chatBody.appendChild(loader);
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ message: msg })
+    });
+    const data = await res.json();
+
+    // 4) حذف لودر و اضافه کردن حباب پاسخ بات
+    if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+
+    const botBubble = createBotBubble(data.reply || 'اوه! مشکلی پیش اومده 😔');
+    chatBody.appendChild(botBubble);
+  } catch (err) {
+    if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+    const botBubble = createBotBubble('اوه! مشکلی پیش اومده 😔');
+    chatBody.appendChild(botBubble);
+  }
+
+  chatBody.scrollTop = chatBody.scrollHeight;
+});
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const chatCircle = document.getElementById('chat-circle');
+
+    // نیم ثانیه بعد از لود، نیم‌دایره باز شود و متن ظاهر شود
+    setTimeout(() => {
+      chatCircle.classList.add('expanded');
+    }, 500);
+
+    // بعد از 3 ثانیه، دوباره جمع شود و فقط لوگو باقی بماند
+    setTimeout(() => {
+      chatCircle.classList.remove('expanded');
+    }, 2500);
+  });
+
+    chatCircle.classList.add('fade-in');
+    logoImg.classList.add('fade-in');
+
+
+
+  </script>
+</body>
+</html>
