@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  outline: none;
+  margin: 0;
+  padding: 0;
+}
+body {
+  margin: 0;
+  font-family: 'Vazirmatn', sans-serif;
+  background-color: #f4f6f8; /* رنگ خنثی و روشن برای بک‌گراند */
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  direction: rtl;
+}
+
+.auth-container {
+  background-color: #ffffff;
+  padding: 36px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
+  animation: popFade 0.8s ease forwards;
+}
+
+@keyframes popFade {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.auth-container h2 {
+  margin-bottom: 20px;
+  font-size: 26px;
+  color: #2c3e50;
+}
+
+.auth-container input {
+  width: 90%;
+  padding: 12px;
+  margin:13px 0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: #fafafa;
+  color: #333;
+  transition: border 0.3s ease;
+}
+
+.auth-container input::placeholder {
+  color: #999;
+}
+
+.auth-container input:focus {
+  border-color: #3498db;
+  outline: none;
+  background-color: #fff;
+}
+
+.auth-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #db3434;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.auth-container button:hover {
+  background-color: #000000;
+}
+
+.auth-container a {
+  display: inline-block;
+  margin-top: 16px;
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.auth-container a:hover {
+  color: #1d6fa5;
+}
