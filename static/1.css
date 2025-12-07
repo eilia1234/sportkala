@@ -662,7 +662,7 @@ header h1 {
 
 .story-modal {
   display: none;
-  position: fixed;
+  position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.9);
   justify-content: center;
@@ -1136,3 +1136,4 @@ header h1 {
 }
 
 }
+
