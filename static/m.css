@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap');
+
+body {
+  font-family: 'Vazirmatn', sans-serif;
+  direction: rtl;
+  margin: 0;
+  padding: 0;
+  background-color: #f3f3f3;
+}
+
+.container {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+/* ستون‌ها */
+.sidebar {
+  min-width: 310px;
+  max-width: 310px;
+  min-height: 380px;
+  max-height: 380px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 13px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.11);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.sidebar.left {
+  order:3 ;
+}
+
+.sidebar.right {
+  order: 1;
+}
+
+/* فضای اصلی محصولات */
+.product-area {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  order: 2;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* کارت محصول */
+.product-card {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(16, 15, 15, 0.436);
+  transition: transform 0.3s;
+  max-height: 340px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-card img {
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+/* دسته‌بندی سمت چپ */
+.sidebar.left ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px;
+}
+
+.sidebar.left li {
+  margin-bottom: 25px;
+}
+
+.sidebar.left a {
+  text-decoration: none;
+  color: #0a0a0a;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sidebar.left a:hover {
+  color: #ab0900;
+}
+
+/* جستجو سمت راست */
+.sidebar.right input {
+  font-family: 'Vazirmatn', sans-serif;
+  width: 90%;
+  padding: 12px;
+  margin-top: 30px;
+  box-shadow: 0 2px 10px rgba(58, 58, 58, 0.145);
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.sidebar.right button {
+  font-family: 'Vazirmatn', sans-serif;
+  width: 100%;
+  padding: 12px;
+  margin-top: 30px;
+  background-color: #ab0900;
+  box-shadow: 0 2px 10px rgb(58, 58, 58);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.sidebar.right button:hover {
+  background-color: #00000097;
+}
+
+/* واکنش‌گرایی موبایل */
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    padding: 10px;
+    gap: 15px;
+  }
+
+  .sidebar {
+    min-width: auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: none !important;
+    margin-bottom: 15px;
+  }
+
+  .product-area {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: 1fr !important;
+    order: 2;
+  }
+}
