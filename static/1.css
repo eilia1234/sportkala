@@ -645,6 +645,8 @@ header h1 {
   }
 }
 
+
+/* ========= استوری‌ها ========= */
 .stories {
   display: flex;
   gap: 16px;
@@ -652,17 +654,23 @@ header h1 {
   overflow-x: auto;
 }
 
-
 .story-text {
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
   margin-top: 8px;
   color: #333;
+  line-height: 1.4;
+  height: 2.8em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  width: 100px;
 }
 
+/* ========= مودال استوری ========= */
 .story-modal {
   display: none;
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.9);
   justify-content: center;
@@ -690,18 +698,67 @@ header h1 {
   object-fit: cover;
 }
 
+/* هدر و اطلاعات کاربر */
 .story-header {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 10px 12px;
+  top: 12px;
+  left: 12px;
+  right: 12px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   z-index: 10;
 }
 
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid white;
+  object-fit: cover;
+}
+
+.user-name {
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* دکمه بستن */
+#closeModal {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  font-size: 22px;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+/* دکمه دنبال کردن */
+#followBtn {
+  background: #ff0040;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+#followBtn.followed {
+  background: #22c55e;
+}
+
+/* نوار پیشرفت */
 .progress-bar {
   position: absolute;
   top: 0;
@@ -711,84 +768,47 @@ header h1 {
   background: linear-gradient(90deg, #ff3b30, #ff6f61);
   animation: progress 6s linear forwards;
 }
+
 @keyframes progress {
   from { width: 0%; }
   to { width: 100%; }
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.user-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid white;
-  object-fit: cover;
-}
-.user-name {
-  color: rgb(0, 0, 0);
-  font-weight: 600;
-  font-size: 14px;
-}
-
-#closeModal {
-  background: rgba(255,255,255,0.15);
-  border: none;
-  color: rgb(0, 0, 0);
-  font-size: 22px;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-}
-
+/* اکشن‌ها (لایک، اشتراک) */
 .story-actions {
   position: absolute;
-  right: 10px;
   bottom: 80px;
+  right: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
 }
 
+.story-actions button,
 .like-btn {
-  background: rgba(255,255,255,0.15);
-  border: none;
-  color: white;
-  font-size: 28px;
-  border-radius: 50%;
   width: 48px;
   height: 48px;
-  cursor: pointer;
+  font-size: 20px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.like-count {
-  font-size: 14px;
-  color: white;
-  font-weight: bold;
-  margin-top: 2px;
-  font-family: 'Vazirmatn', sans-serif;
-}
-
-
-.story-actions button {
-  background: rgba(7, 7, 7, 0.445);
-  border: none;
-  color: white;
-  font-size: 20px;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
   cursor: pointer;
 }
 
+.like-btn {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-size: 28px;
+}
+
+.story-actions button {
+  background: rgba(7, 7, 7, 0.445);
+  color: white;
+}
+
+/* توضیح پایین ویدیو */
 .story-desc {
   position: absolute;
   bottom: 20px;
@@ -800,32 +820,8 @@ header h1 {
   padding: 0 20px;
   background: rgba(0,0,0,0.35);
 }
-/* 🔘 دکمه دنبال کردن */
-#followBtn {
-  background: #ff0040;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.3s ease;
-  margin-right: 8px;
-}
 
-#followBtn.followed {
-  background: #22c55e;
-  color: white;
-}
-
-/* 📍جای دکمه‌های بالا */
-.header-buttons {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* 💖 پاپ‌آپ قلب در وسط صفحه */
+/* پاپ‌آپ قلب */
 .heart-popup {
   position: absolute;
   top: 50%;
@@ -843,62 +839,35 @@ header h1 {
   opacity: 1;
 }
 
-
+/* حلقه دور عکس استوری */
 .story-circle {
   position: relative;
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  padding: 2.2px; /* فاصله برای حلقه رنگی */
+  padding: 2.2px;
   background: linear-gradient(315deg, #e03d96, #7d4c9e);
-  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.story-circle img {
-  width: calc(100% - 0.5px); /* 👈 فاصله سفید حدود 5px از هر طرف (در مجموع 10px) */
-  height: calc(100% - 0.5px);
-  border-radius: 50%;
-  object-fit: cover;
-  background: white; /* لایه سفید بین عکس و رنگ */
-  padding: 2.5px; /* 👈 تنظیم دقیق فاصله سفید بین عکس و حلقه رنگی */
-  box-sizing: border-box;
-}
-.story-text {
-  font-size: 14px;
-  color: #333;
-  margin-top: 8px;
-  text-align: center;
-  line-height: 1.4;
-  height: 2.8em;        /* دقیقاً دو خط */
-  overflow: hidden;     /* بقیه متن دیده نشه */
-  text-overflow: ellipsis;
-  white-space: normal;
-  width: 100px;
-}
-/* 🎯 ریسپانسیو حرفه‌ای برای ویدیو استوری در موبایل */
+.story-circle img { width: calc(100% - 0.5px); /* 👈 فاصله سفید حدود 5px از هر طرف (در مجموع 10px) */ height: calc(100% - 0.5px); border-radius: 50%; object-fit: cover; background: white; /* لایه سفید بین عکس و رنگ */ padding: 2.5px; /* 👈 تنظیم دقیق فاصله سفید بین عکس و حلقه رنگی */ box-sizing: border-box; }
+
+/* ========= ریسپانسیو موبایل ========= */
 @media (max-width: 768px) {
 
-  /* استوری مودال تمام‌صفحه واقعی */
   .story-modal.active {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: black;
-    inset: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 99999;
+    border-radius: 0;
+    inset: 0;
   }
 
   .modal-content {
     width: 100vw;
     height: 100vh;
     border-radius: 0;
-    max-width: none;
-    background: black;
   }
 
   #storyVideo {
@@ -907,26 +876,11 @@ header h1 {
     object-fit: cover;
   }
 
-  /* نوار پیشرفت بالای صفحه */
-  .progress-bar {
-    top: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #ff003c, #ff9a9e);
-  }
-
-  /* هدر کاربر در بالای ویدیو */
   .story-header {
     top: 8px;
-    right: 10px;
-    left: 10px;
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .user-info {
-    gap: 6px;
+    left: 8px;
+    right: 8px;
+    padding: 0 6px;
   }
 
   .user-avatar {
@@ -940,54 +894,38 @@ header h1 {
 
   #followBtn {
     font-size: 12px;
-    padding: 5px 10px;
+    padding: 4px 10px;
   }
 
   #closeModal {
     font-size: 20px;
     width: 34px;
     height: 34px;
-    background: rgba(255, 255, 255, 0.1);
   }
 
-  /* آیکون‌های لایک و اشتراک و ... */
   .story-actions {
-    bottom: 90px;
-    right: 10px;
-    gap: 14px;
+    bottom: 80px;
+    right: 8px;
+    gap: 12px;
   }
 
-  .story-actions button {
-    width: 48px;
-    height: 48px;
-    font-size: 20px;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(4px);
+  .story-actions button,
+  .like-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
   }
 
-  /* توضیح پایین ویدیو */
-  .story-desc {
-    bottom: 20px;
-    font-size: 14px;
-    padding: 8px 18px;
-    color: #fff;
-    text-shadow: 0 0 8px rgba(0,0,0,0.6);
-    background: rgba(0,0,0,0.35);
-  }
-
-  /* افکت قلب هنگام لایک */
   .heart-popup {
     font-size: 70px;
   }
+
+  .story-desc {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
 }
 
-.menu-icon {
-  display: none;
-}
-/* فقط نمایش در موبایل */
-.mobile-auth {
-  display: none;
-}
 
 
 
@@ -1134,6 +1072,4 @@ header h1 {
     width: 100%;
   }
 }
-
 }
-
