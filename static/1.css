@@ -916,7 +916,7 @@ header h1 {
 
   /* هدر کاربر در بالای ویدیو */
   .story-header {
-    top: 27px;
+    top: 32px;
     right: 10px;
     left: 10px;
     padding: 0;
@@ -1135,4 +1135,5 @@ header h1 {
   }
 }
 }
+
 
