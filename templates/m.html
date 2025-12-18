@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>محصولات | فروشگاه تجهیزات ورزشی اسپرت کالا</title>
 <link rel="icon" type="image/png" href="/static/ChatGPT Image Oct 5, 2025, 09_08_17 AM.png">
 
@@ -189,21 +189,26 @@ header{
 }
 
 @media(max-width:600px){
+  
   .search-container{flex-direction:column;}
 
   .product-list{
     grid-template-columns:1fr;
     padding:12px;
+    box-sizing:border-box; /* مهم برای جلوگیری از بیرون زدن */
   }
 
   .product-card{
     flex-direction:row-reverse;
     align-items:center;
     padding:15px;
-  }
+    max-width:100%; /* کارت حداکثر به اندازه صفحه */
+    box-sizing:border-box;
 
+
+  }
   .product-image{
-    width:105px;
+    width:100px;
     height:100px;
     margin-left:12px;
   }
