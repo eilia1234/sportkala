@@ -523,13 +523,13 @@ body {
     <video id="storyVideo" playsinline></video>
 
     <div class="story-actions">
-      <button class="like-btn">❤️</button>
-      <span class="like-count">۰</span> <!-- 👈 شمارنده لایک -->
+      <button class="like-btn">🤍</button>
+      <span class="like-count">۰</span> <!-- شمارنده لایک صحیح -->
       <button class="mute-btn">🔊</button>
     </div>
-    <div id="heartPopup" class="heart-popup">❤️</div>
-    <span class="like-count">۰</span>
 
+    <!-- پاپ‌آپ قلب -->
+    <div id="heartPopup" class="heart-popup">❤️</div>
 
     <div class="story-desc"></div>
   </div>
@@ -782,33 +782,28 @@ function resetIranOfferTimer(hoursFromNow = 0) {
   startIranOfferTimer();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   const stories = document.querySelectorAll('.story');
   const storyModal = document.getElementById('storyModal');
   const storyVideo = document.getElementById('storyVideo');
-  const userAvatar = document.querySelector('.user-avatar');
-  const userName = document.querySelector('.user-name');
-  const storyDesc = document.querySelector('.story-desc');
+  const userAvatar = storyModal.querySelector('.user-avatar');
+  const userName = storyModal.querySelector('.user-name');
+  const storyDesc = storyModal.querySelector('.story-desc');
   const closeModal = document.getElementById('closeModal');
-  const likeBtn = document.querySelector('.like-btn');
-  const likeCount = document.querySelector('.like-count');
-  const muteBtn = document.querySelector('.mute-btn');
+  const likeBtn = storyModal.querySelector('.like-btn');
+  const likeCount = storyModal.querySelector('.like-count');
+  const muteBtn = storyModal.querySelector('.mute-btn');
   const followBtn = document.getElementById('followBtn');
   const heartPopup = document.getElementById('heartPopup');
 
-  // 🔹 localStorage دنبال کردن
   let followState = JSON.parse(localStorage.getItem('followState') || '{}');
+  let likeState = JSON.parse(localStorage.getItem('likeState') || '{}');
 
-  // 🔢 تبدیل اعداد به فارسی
   const toPersianNumber = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
-  // باز کردن استوری
   stories.forEach((story, index) => {
     story.addEventListener('click', () => {
-      const story_id = story.dataset.id;
-      storyModal.dataset.currentId = story_id;
       storyModal.dataset.currentIndex = index;
-
       storyVideo.src = story.dataset.video;
       userAvatar.src = story.dataset.profile;
       userName.textContent = story.dataset.name;
@@ -819,64 +814,51 @@ document.addEventListener("DOMContentLoaded", () => {
       storyVideo.loop = true;
       storyVideo.play();
 
-      // وضعیت لایک و تعداد واقعی از سرور
-      fetch(`/like_story_status?story_id=${story_id}`)
-        .then(res => res.json())
-        .then(data => {
-          likeBtn.textContent = data.liked ? '❤️' : '🤍';
-          likeCount.textContent = toPersianNumber(data.total_likes);
-        })
-        .catch(err => console.error("Error fetching like status:", err));
+      // لایک محلی
+      const liked = likeState[index] || false;
+      likeBtn.textContent = liked ? '❤️' : '🤍';
+      likeCount.textContent = toPersianNumber(liked ? 1 : 0);
 
-      // وضعیت دنبال کردن
       const isFollowed = followState[index] || false;
       followBtn.textContent = isFollowed ? 'دنبال شد' : 'دنبال کردن';
       followBtn.classList.toggle('followed', isFollowed);
     });
   });
 
-  // بستن مودال
   closeModal.addEventListener('click', () => {
     storyModal.style.display = 'none';
     storyVideo.pause();
+    storyVideo.src = '';
   });
 
-  // ❤️ لایک با toggle و پاپ‌آپ قلب
   likeBtn.addEventListener('click', () => {
-    const story_id = storyModal.dataset.currentId;
+    const index = storyModal.dataset.currentIndex;
+    likeState[index] = !likeState[index];
+    localStorage.setItem('likeState', JSON.stringify(likeState));
 
-    fetch("/like_story", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ story_id })
-    })
-      .then(res => res.json())
-      .then(data => {
-        likeBtn.textContent = data.liked ? '❤️' : '🤍';
-        likeCount.textContent = toPersianNumber(data.total_likes);
+    likeBtn.textContent = likeState[index] ? '❤️' : '🤍';
+    likeCount.textContent = toPersianNumber(likeState[index] ? 1 : 0);
 
-        heartPopup.classList.add('show');
-        setTimeout(() => heartPopup.classList.remove('show'), 600);
-      })
-      .catch(err => console.error("Error updating like:", err));
+    // پاپ آپ قلب
+    heartPopup.classList.add('show');
+    setTimeout(() => heartPopup.classList.remove('show'), 600);
   });
 
-  // 🔇 کنترل صدا
   muteBtn.addEventListener('click', () => {
     storyVideo.muted = !storyVideo.muted;
     muteBtn.textContent = storyVideo.muted ? '🔇' : '🔊';
   });
 
-  // 🟢 دنبال کردن (localStorage)
   followBtn.addEventListener('click', () => {
     const index = storyModal.dataset.currentIndex;
     followState[index] = !followState[index];
     localStorage.setItem('followState', JSON.stringify(followState));
-
     followBtn.textContent = followState[index] ? 'دنبال شد' : 'دنبال کردن';
     followBtn.classList.toggle('followed', followState[index]);
   });
 });
+
+
 
 window.addEventListener('DOMContentLoaded', () => {
   const amazingOffers = document.querySelector('.amazing-offers');
