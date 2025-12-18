@@ -5,5 +5,4 @@ flask_login
 python-dotenv
 requests
 openai
-sqlalchemy.exc
-IntegrityError
+
