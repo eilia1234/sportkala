@@ -31,24 +31,36 @@ body {
   background: #f5f5f5;
 }
 
-    /* 🎯 پیام عضویت موفق */
 .subscribe-message {
-  position: fixed;
-  top: 50%;
-  left: 50%; 
-  transform: translate(-50%, -50%) scale(0.8);
-  background: linear-gradient(135deg, #af4c4c, #cc2e2e);
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 16px 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.4s ease;
-  z-index: 99999;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+
+    background: linear-gradient(135deg, #af4c4c, #cc2e2e);
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.5;
+    text-align: center;
+
+    padding: 16px 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+
+    /* 👇 مهم‌ترین بخش */
+    width: max-content;
+    max-width: 90vw;
+    white-space: normal;
+    word-wrap: break-word;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s ease;
+    z-index: 99999;
 }
+
 
     .subscribe-message.show {
       opacity: 1;
@@ -439,7 +451,7 @@ body {
   <div class="powered-by">قدرت گرفته از ایلیا ✨</div>
   <div id="chat-body">
     <div class="message bot"><p>سلام! من سیریا هستم 😊</p>
-       <p><br>دستیار هوش مصنوعی اسپرت کالا !</p><br>اگر سوالی درباره خرید یا محصولات داری کد یا نام محصول رو وارد کنم. در ضمن به به سوالات دیگه هم پاسخ میدم😉</div>
+       <p><br>دستیار هوش مصنوعی اسپرت کالا !</p><br>اگر سوالی درباره خرید یا محصولات داری کد یا نام محصول رو وارد کن. در ضمن به به سوالات دیگه هم پاسخ میدم😉</div>
   </div>
   <div id="chat-input">
     <input type="text" placeholder="از سیریا بپرس....">
@@ -770,112 +782,100 @@ function resetIranOfferTimer(hoursFromNow = 0) {
   startIranOfferTimer();
 }
 
-// اجرای اولیه تایمر هنگام بارگذاری صفحه
-document.addEventListener("DOMContentLoaded", startIranOfferTimer);
 document.addEventListener("DOMContentLoaded", () => {
-const stories = document.querySelectorAll('.story');
-const storyModal = document.getElementById('storyModal');
-const storyVideo = document.getElementById('storyVideo');
-const userAvatar = document.querySelector('.user-avatar');
-const userName = document.querySelector('.user-name');
-const storyDesc = document.querySelector('.story-desc');
-const closeModal = document.getElementById('closeModal');
-const likeBtn = document.querySelector('.like-btn');
-const likeCount = document.querySelector('.like-count'); // span زیر قلب
-const muteBtn = document.querySelector('.mute-btn');
-const followBtn = document.getElementById('followBtn');
-const heartPopup = document.getElementById('heartPopup');
+  const stories = document.querySelectorAll('.story');
+  const storyModal = document.getElementById('storyModal');
+  const storyVideo = document.getElementById('storyVideo');
+  const userAvatar = document.querySelector('.user-avatar');
+  const userName = document.querySelector('.user-name');
+  const storyDesc = document.querySelector('.story-desc');
+  const closeModal = document.getElementById('closeModal');
+  const likeBtn = document.querySelector('.like-btn');
+  const likeCount = document.querySelector('.like-count');
+  const muteBtn = document.querySelector('.mute-btn');
+  const followBtn = document.getElementById('followBtn');
+  const heartPopup = document.getElementById('heartPopup');
 
-// 💾 حافظه لایک و دنبال کردن
-let likesState = JSON.parse(localStorage.getItem('likesState')) || {};
-let likesCount = JSON.parse(localStorage.getItem('likesCount')) || {};
-let followState = JSON.parse(localStorage.getItem('followState')) || {};
+  // 🔹 localStorage دنبال کردن
+  let followState = JSON.parse(localStorage.getItem('followState') || '{}');
 
-// 🔢 تبدیل اعداد به فارسی
-function toPersianNumber(num) {
-  const persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
-  return num.toString().replace(/\d/g, x => persianDigits[x]);
-}
+  // 🔢 تبدیل اعداد به فارسی
+  const toPersianNumber = num => num.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 
-// باز کردن استوری
-stories.forEach((story, index) => {
-  if (!(index in likesState)) likesState[index] = false;
-  if (!(index in likesCount)) likesCount[index] = 0;
-  if (!(index in followState)) followState[index] = false;
+  // باز کردن استوری
+  stories.forEach((story, index) => {
+    story.addEventListener('click', () => {
+      const story_id = story.dataset.id;
+      storyModal.dataset.currentId = story_id;
+      storyModal.dataset.currentIndex = index;
 
-  story.addEventListener('click', () => {
-    const videoSrc = story.getAttribute('data-video');
-    const profileSrc = story.getAttribute('data-profile');
-    const name = story.getAttribute('data-name');
-    const desc = story.getAttribute('data-desc');
+      storyVideo.src = story.dataset.video;
+      userAvatar.src = story.dataset.profile;
+      userName.textContent = story.dataset.name;
+      storyDesc.textContent = story.dataset.desc;
+      storyModal.style.display = 'flex';
+      storyVideo.muted = false;
+      muteBtn.textContent = '🔊';
+      storyVideo.loop = true;
+      storyVideo.play();
 
-    storyVideo.src = videoSrc;
-    userAvatar.src = profileSrc;
-    userName.textContent = name;
-    storyDesc.textContent = desc;
-    storyModal.style.display = 'flex';
-    storyVideo.muted = false;
-    muteBtn.textContent = '🔊';
-    storyVideo.loop = true; // 🔁 لوپ
-    storyVideo.play();
-    storyModal.setAttribute('data-current-index', index);
+      // وضعیت لایک و تعداد واقعی از سرور
+      fetch(`/like_story_status?story_id=${story_id}`)
+        .then(res => res.json())
+        .then(data => {
+          likeBtn.textContent = data.liked ? '❤️' : '🤍';
+          likeCount.textContent = toPersianNumber(data.total_likes);
+        })
+        .catch(err => console.error("Error fetching like status:", err));
 
-    // ❤️ وضعیت لایک و نمایش تعداد فارسی
-    likeBtn.textContent = likesState[index] ? '❤️' : '🤍';
-    likeCount.textContent = toPersianNumber(likesCount[index]);
+      // وضعیت دنبال کردن
+      const isFollowed = followState[index] || false;
+      followBtn.textContent = isFollowed ? 'دنبال شد' : 'دنبال کردن';
+      followBtn.classList.toggle('followed', isFollowed);
+    });
+  });
 
-    // 🟢 وضعیت دنبال کردن
+  // بستن مودال
+  closeModal.addEventListener('click', () => {
+    storyModal.style.display = 'none';
+    storyVideo.pause();
+  });
+
+  // ❤️ لایک با toggle و پاپ‌آپ قلب
+  likeBtn.addEventListener('click', () => {
+    const story_id = storyModal.dataset.currentId;
+
+    fetch("/like_story", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ story_id })
+    })
+      .then(res => res.json())
+      .then(data => {
+        likeBtn.textContent = data.liked ? '❤️' : '🤍';
+        likeCount.textContent = toPersianNumber(data.total_likes);
+
+        heartPopup.classList.add('show');
+        setTimeout(() => heartPopup.classList.remove('show'), 600);
+      })
+      .catch(err => console.error("Error updating like:", err));
+  });
+
+  // 🔇 کنترل صدا
+  muteBtn.addEventListener('click', () => {
+    storyVideo.muted = !storyVideo.muted;
+    muteBtn.textContent = storyVideo.muted ? '🔇' : '🔊';
+  });
+
+  // 🟢 دنبال کردن (localStorage)
+  followBtn.addEventListener('click', () => {
+    const index = storyModal.dataset.currentIndex;
+    followState[index] = !followState[index];
+    localStorage.setItem('followState', JSON.stringify(followState));
+
     followBtn.textContent = followState[index] ? 'دنبال شد' : 'دنبال کردن';
     followBtn.classList.toggle('followed', followState[index]);
   });
-});
-
-// ❌ بستن استوری
-closeModal.addEventListener('click', () => {
-  storyModal.style.display = 'none';
-  storyVideo.pause();
-});
-
-// ❤️ لایک با پاپ‌آپ قلب و شمارش فارسی
-likeBtn.addEventListener('click', () => {
-  const currentIndex = storyModal.getAttribute('data-current-index');
-
-  likesState[currentIndex] = !likesState[currentIndex];
-  if (likesState[currentIndex]) {
-    likesCount[currentIndex]++;
-  } else {
-    likesCount[currentIndex] = Math.max(0, likesCount[currentIndex] - 1);
-  }
-
-  // نمایش ❤️ و تعداد فارسی
-  likeBtn.textContent = likesState[currentIndex] ? '❤️' : '🤍';
-  likeCount.textContent = toPersianNumber(likesCount[currentIndex]);
-
-  localStorage.setItem('likesState', JSON.stringify(likesState));
-  localStorage.setItem('likesCount', JSON.stringify(likesCount));
-
-  // پاپ‌آپ قلب وسط صفحه
-  heartPopup.classList.add('show');
-  setTimeout(() => heartPopup.classList.remove('show'), 600);
-});
-
-// 🔇 کنترل صدا
-muteBtn.addEventListener('click', () => {
-  storyVideo.muted = !storyVideo.muted;
-  muteBtn.textContent = storyVideo.muted ? '🔇' : '🔊';
-});
-
-// 🟢 دنبال کردن / دنبال شد
-followBtn.addEventListener('click', () => {
-  const currentIndex = storyModal.getAttribute('data-current-index');
-  followState[currentIndex] = !followState[currentIndex];
-  localStorage.setItem('followState', JSON.stringify(followState));
-
-  followBtn.textContent = followState[currentIndex] ? 'دنبال شد' : 'دنبال کردن';
-  followBtn.classList.toggle('followed', followState[currentIndex]);
-});
-
-
 });
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -965,7 +965,6 @@ function createBotBubble(text) {
 sendBtn.addEventListener('click', async () => {
   const msg = chatInput.value.trim();
   if (!msg) return;
-
   // 1) پیام کاربر (همان شکل قبلی)
   const userMsg = document.createElement('div');
   userMsg.classList.add('message','user');
