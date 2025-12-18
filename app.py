@@ -68,11 +68,7 @@ def load_user(user_id):
     except Exception:
         return None
     
-class StoryLike(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    story_id = db.Column(db.String(50), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
 
 
 
@@ -196,7 +192,6 @@ def bwater6():
 @app.route("/index15")
 def cboard():
     return render_template("index15.html", user=current_user)
-
 
 
 
@@ -365,54 +360,6 @@ def chat():
     return jsonify({"reply": assistant_reply})
 
 
-# =========================
-# Updated Story Like Endpoints
-# =========================
-from sqlalchemy.exc import IntegrityError
-
-@app.route("/like_story", methods=["POST"])
-@login_required
-def like_story():
-    data = request.get_json()
-    story_id = data.get("story_id")
-    if not story_id:
-        return jsonify({"error": "story_id لازم است"}), 400
-
-    try:
-        # تلاش می‌کنیم لایک جدید اضافه کنیم
-        new_like = StoryLike(story_id=story_id, user_id=current_user.id)
-        db.session.add(new_like)
-        db.session.commit()
-        liked = True
-    except IntegrityError:
-        # اگر قبلاً لایک زده شده بود، حذف می‌کنیم
-        db.session.rollback()
-        existing_like = StoryLike.query.filter_by(story_id=story_id, user_id=current_user.id).first()
-        if existing_like:
-            db.session.delete(existing_like)
-            db.session.commit()
-            liked = False
-        else:
-            liked = False
-
-    total_likes = StoryLike.query.filter_by(story_id=story_id).count()
-    return jsonify({"liked": liked, "total_likes": total_likes})
-
-@app.route("/like_story_status")
-@login_required
-def like_story_status():
-    story_id = request.args.get("story_id")
-    if not story_id:
-        return jsonify({"error": "story_id لازم است"}), 400
-
-    liked = StoryLike.query.filter_by(story_id=story_id, user_id=current_user.id).first() is not None
-    total_likes = StoryLike.query.filter_by(story_id=story_id).count()
-
-    # اضافه کردن حداقل 1 لایک برای دستگاه‌ها که صفر نشه (می‌تونه حالت شبیه DigiKala باشه)
-    if total_likes == 0:
-        total_likes = 1
-
-    return jsonify({"liked": liked, "total_likes": total_likes})
 
 
 # =========================
