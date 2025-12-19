@@ -726,61 +726,40 @@ const menuBtn = document.getElementById('menuBtn'); const navMenu = document.get
   }, 200); // کمی تأخیر برای جلوه طبیعی
 });
 
-// تایمر ۲۴ ساعته با زمان رسمی ایران و قابلیت ریست دستی
-function startIranOfferTimer() {
-  const countdownEl = document.getElementById("countdown");
-  if (!countdownEl) return;
+async function start48hServerTimer() {
+  const el = document.getElementById("countdown");
+  if (!el) return;
 
-  const iranOffset = 3.5 * 60 * 60 * 1000; // اختلاف زمانی ایران با UTC
-  const nowUTC = Date.now();
-  const nowIran = nowUTC + iranOffset;
+  try {
+    const res = await fetch("/offer-timer");
+    const data = await res.json();
 
-  const offerDuration = 48 * 60 * 60 * 1000; // ۲۴ ساعت به میلی‌ثانیه
-  let offerStart = localStorage.getItem("iranOfferStart");
+    let remaining = data.remaining;
 
-  // اگر مقدار قبلی معتبر نیست یا بیشتر از ۲۴ ساعت گذشته، مقدار جدید ذخیره کن
-  if (!offerStart || isNaN(Number(offerStart)) || nowIran - Number(offerStart) > offerDuration) {
-    offerStart = nowIran;
-    localStorage.setItem("iranOfferStart", offerStart);
-  } else {
-    offerStart = Number(offerStart);
+    const toPersian = n =>
+      n.toString().padStart(2,'0').replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+
+    setInterval(() => {
+      if (remaining <= 0) {
+        remaining = 48 * 60 * 60; // اگر صفر شد، دوباره ۴۸ ساعت
+      }
+
+      remaining--;
+
+      const h = Math.floor(remaining / 3600);
+      const m = Math.floor((remaining % 3600) / 60);
+      const s = remaining % 60;
+
+      el.textContent = `${toPersian(h)}:${toPersian(m)}:${toPersian(s)}`;
+    }, 1000);
+
+  } catch (e) {
+    el.textContent = "خطا ⛔";
   }
-
-  const offerEnd = offerStart + offerDuration;
-
-  function updateCountdown() {
-    const currentIranTime = Date.now() + iranOffset;
-    let remaining = Math.floor((offerEnd - currentIranTime) / 1000);
-
-    if (remaining <= 0) {
-      remaining = 0;
-      clearInterval(timerInterval);
-      localStorage.removeItem("iranOfferStart");
-      // تایمر متوقف می‌شود، اما ریست نمی‌شود مگر اینکه خودت resetIranOfferTimer() را صدا بزنی
-    }
-
-    const hours = Math.floor(remaining / 3600);
-    const minutes = Math.floor((remaining % 3600) / 60);
-    const seconds = remaining % 60;
-
-    // تبدیل به عدد فارسی
-    const toPersian = (num) =>
-      num.toString().padStart(2, '0').replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
-
-    countdownEl.textContent = `${toPersian(hours)}:${toPersian(minutes)}:${toPersian(seconds)}`;
-  }
-
-  updateCountdown();
-  const timerInterval = setInterval(updateCountdown, 1000);
 }
 
-// تابع دستی برای ریست یا تمدید تایمر از طریق کد
-function resetIranOfferTimer(hoursFromNow = 0) {
-  const iranOffset = 3.5 * 60 * 60 * 1000;
-  const newStart = Date.now() + iranOffset + hoursFromNow * 60 * 60 * 1000;
-  localStorage.setItem("iranOfferStart", newStart);
-  startIranOfferTimer();
-}
+document.addEventListener("DOMContentLoaded", start48hServerTimer);
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const stories = document.querySelectorAll('.story');
