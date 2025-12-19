@@ -1,11 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>محصولات | فروشگاه تجهیزات ورزشی اسپرت کالا</title>
 <link rel="icon" type="image/png" href="/static/ChatGPT Image Oct 5, 2025, 09_08_17 AM.png">
-
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&family=Baloo+Bhaijaan+2:wght@700&display=swap" rel="stylesheet">
 
 <style>
@@ -33,7 +33,6 @@ header{
   transition:.3s;
 }
 
-/* --- بخش بالای هدر --- */
 .header-top{
   display:flex;
   align-items:center;
@@ -47,13 +46,6 @@ header{
   box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
 
-/* --- اجزای هدر --- */
-.header-left,
-.header-right{
-  display:flex;
-  align-items:center;
-}
-
 .header-left{
   font-weight:700;
   font-size:32px;
@@ -61,6 +53,8 @@ header{
 }
 
 .header-right{
+  display:flex;
+  align-items:center;
   gap:12px;
 }
 
@@ -117,7 +111,6 @@ header{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:16px;
-  justify-content:center;
 }
 
 .product-link{
@@ -135,6 +128,12 @@ header{
   flex-direction:column;
   align-items:center;
   padding:12px;
+  border-bottom:1px solid #eee;
+  transition: box-shadow 0.3s;
+}
+
+.product-card:hover{
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
 }
 
 .product-image{
@@ -166,20 +165,6 @@ header{
   color:#fc0606;
   font-weight:700;
 }
-/* ==================== افکت برجستگی شبیه دیجی‌کالا (فقط دسکتاپ) ==================== */
-@media (hover: hover) and (pointer: fine) {
-
-  .product-card {
-    transition: box-shadow 0.25s ease;
-  }
-
-  .product-link:hover .product-card {
-    box-shadow:
-      0 8px 20px rgba(0,0,0,0.15),
-      0 2px 6px rgba(0,0,0,0.08);
-  }
-}
-
 
 /* ==================== ریسپانسیو ==================== */
 @media(max-width:900px){
@@ -187,35 +172,57 @@ header{
     grid-template-columns:repeat(2,1fr);
   }
 }
+/* فقط برای موبایل */
+@media (max-width: 768px) {
+  .product-card { 
+    box-shadow: none;      /* حذف سایه */
+    border: none;          /* حذف کادر */
+    margin: 0;             /* فاصله اضافی حذف شود */
+    padding: 10px 0;       /* فاصله عمودی بین محصولات */
+    border-bottom: 1px solid #ddd; /* خط کم‌رنگ جداکننده */
+  }
+
+  /* اگر داخل کارت divهای دیگر هست، فاصله داخلی رو کمتر کنیم */
+  .product-card > * {
+    margin: 0;
+    padding: 0;
+  }
+}
+
 
 @media(max-width:600px){
-  
-  .search-container{flex-direction:column;}
+  .search-container{
+    flex-direction:column;
+  }
+
 
   .product-list{
     grid-template-columns:1fr;
     padding:12px;
-    box-sizing:border-box; /* مهم برای جلوگیری از بیرون زدن */
   }
 
   .product-card{
     flex-direction:row-reverse;
     align-items:center;
-    padding:15px;
-    max-width:100%; /* کارت حداکثر به اندازه صفحه */
-    box-sizing:border-box;
-
-
+    padding:12px;
+    max-width:100%;
+    width:100%;
+    border-radius:8px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.08);
+    border-bottom:1px solid #ddd;
+    margin-bottom:8px;
   }
+
   .product-image{
     width:100px;
     height:100px;
     margin-left:12px;
+    object-fit:cover;
   }
 
   .product-details{
     text-align:right;
-    width:250px;
+    flex:1;
   }
 
   .header-left{
@@ -235,7 +242,6 @@ header{
 
   <div class="search-container">
     <input class="search-box" id="searchInput" placeholder="جستجو کنید ..." oninput="filterProducts()">
-
     <div class="filter-bar">
       <button onclick="setFilter('همه')" class="active">همه</button>
       <button onclick="setFilter('کفش')">کفش</button>
@@ -247,11 +253,12 @@ header{
 </header>
 
 <div class="product-list" id="productList">
+  <!-- نمونه محصول -->
   <a href="/index3" class="product-link">
     <div class="product-card" data-tags="کفش">
       <img class="product-image" src="/static/استوک.jpg" alt="کفش ادیداس">
       <div class="product-details">
-        <div class="product-title">کفش فوتبال حرفه‌ای کد 201👟⚽ </div>
+        <div class="product-title">کفش فوتبال حرفه‌ای کد 201👟⚽</div>
         <div class="product-rating">⭐ ۴.۵ از ۱۲۰ نظر</div>
         <div class="product-price">۱,۲۰۰,۰۰۰ تومان</div>
       </div>
@@ -388,8 +395,6 @@ header{
       </div>
     </div>
   </a>
-  
-
 </div>
 
 <script>
@@ -412,10 +417,8 @@ function filterProducts(){
   document.querySelectorAll(".product-link").forEach(item=>{
     const title=normalize(item.querySelector(".product-title").textContent);
     const tag=item.querySelector(".product-card").dataset.tags;
-
     const okSearch=!search || title.includes(search);
     const okTag=activeTag==="همه" || tag===activeTag;
-
     item.style.display=(okSearch && okTag)?"block":"none";
   });
 }
@@ -429,10 +432,3 @@ window.addEventListener("scroll",()=>{
 </body>
 </html>
 
-
-
-
-
-
-
-\
