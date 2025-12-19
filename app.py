@@ -221,7 +221,7 @@ from openai import OpenAI
 
 # --- کلاینت AvalAI ---
 avalai_client = OpenAI(
-    api_key="aa-eNwB0IrzyDFqu1vGYqtFERnsf0YUoGEu8Pw1GXiLvDVw87Ky",
+    api_key="aa-aIx1xu6DsSRLL9Xna9CriR0OWCYo8gNGY6FJgBAz5f9Fhdxa",
     base_url="https://api.avalai.ir/v1"
 )
 
@@ -374,3 +374,4 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run( port=5000, debug=True)
+
