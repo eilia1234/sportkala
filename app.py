@@ -346,6 +346,27 @@ def chat():
 
 
 
+from datetime import datetime, timedelta
+
+@app.route("/offer-timer")
+def offer_timer():
+    iran_now = datetime.utcnow() + timedelta(hours=3, minutes=30)
+
+    PERIOD = 48 * 60 * 60  # ۴۸ ساعت
+
+    # نیمه‌شب امروز ایران
+    midnight = iran_now.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    elapsed = int((iran_now - midnight).total_seconds())
+
+    # اگر بیشتر از ۴۸ ساعت گذشته، وارد دوره بعدی می‌شویم
+    elapsed %= PERIOD
+
+    remaining = PERIOD - elapsed
+
+    return jsonify({
+        "remaining": remaining
+    })
 
 
 # ---------------- run ----------------
