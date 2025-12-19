@@ -232,21 +232,29 @@ def chat():
 
     if not message:
         return jsonify({"reply": "هیچ پیامی دریافت نشد 😅"})
-    
-    user_id = str(current_user.id) if current_user.is_authenticated else "guest"
 
-    # ----- Load or create conversation -----
+    # شناسایی کاربر
+    if current_user.is_authenticated:
+        user_id = str(current_user.id)
+    else:
+        # برای کاربران لاگین نشده از IP یا session استفاده کن
+        user_id = request.remote_addr
+
+    # ---------------- Load or create conversation ----------------
     conv = Conversation.query.filter_by(user_id=user_id).first()
     history = []
-    if conv:
+    if conv and conv.messages:
         try:
             history = json.loads(conv.messages)
+            if not isinstance(history, list):
+                history = []
         except Exception:
             history = []
 
+    # فقط پیام‌های درست با role و content
     cleaned_history = [msg for msg in history if isinstance(msg, dict) and "role" in msg and "content" in msg]
 
-    # ----- System prompt کلی -----
+    # ---------------- System prompt کلی ----------------
     system_prompt = {
         "role": "system",
         "content": (
@@ -260,15 +268,15 @@ def chat():
         )
     }
 
+    # پیام‌ها برای ارسال به AI
     payload_messages = [system_prompt] + cleaned_history[-30:]
     payload_messages.append({"role": "user", "content": message})
 
-    # ----- بررسی محصول -----
+    # ---------------- بررسی محصول ----------------
     product = find_product_by_message(message)
     assistant_reply = None
 
     if product:
-        # پاسخ مستقیم برای سوالات مشخص
         keywords = {
             "price": ["قیمت", "چنده", "price", "چقدر"],
             "features": ["ویژگی", "خصوصیت", "کاربرد", "مزایا"],
@@ -279,21 +287,16 @@ def chat():
         msg_lower = message.lower()
         if any(k in msg_lower for k in keywords["price"]):
             assistant_reply = f"💰 قیمت محصول '{product['name']}' {product['price']} تومان است."
-
         elif any(k in msg_lower for k in keywords["features"]):
             features = ", ".join(product.get("features", []))
             assistant_reply = f"⚡ ویژگی‌ها و کاربردهای محصول '{product['name']}': {features}"
-
         elif any(k in msg_lower for k in keywords["material"]):
             material = product.get("material", "اطلاعات موجود نیست")
             assistant_reply = f"🧵 جنس محصول '{product['name']}' از {material} ساخته شده است."
-
         elif any(k in msg_lower for k in keywords["category"]):
             category = product.get("category", "نامشخص")
             assistant_reply = f"🏷️ دسته‌بندی محصول '{product['name']}': {category}"
-
         else:
-            # تحلیل کامل محصول برای پیام کلی
             product_context = {
                 "name": product.get("name"),
                 "brand": product.get("brand"),
@@ -305,13 +308,14 @@ def chat():
             payload_messages.append({
                 "role": "system",
                 "content": (
-                    "اطلاعات محصول زیر برای تجزیه و تحلیل است. لطفاً آن را تجزیه و تحلیل کن و به شکل دوستانه و مفصل و کاربردی توضیح بده. "
-                    "ویژگی‌ها، کاربردها، مزایا و نکات مثبت محصول را تجزیه و تحیل کن و توضیح بده و فقط متن محصول را کپی نکن.\n\n"
+                    "اطلاعات محصول زیر برای تجزیه و تحلیل است. لطفاً آن را تحلیل و توضیح بده، "
+                    "ویژگی‌ها، کاربردها و نکات مثبت محصول را به شکل دوستانه و مفصل بیان کن، "
+                    "و فقط متن محصول را کپی نکن.\n\n"
                     f"{json.dumps(product_context, ensure_ascii=False, indent=2)}"
                 )
             })
 
-    # ----- تماس با AvalAI اگر پاسخ مستقیم داده نشده -----
+    # ---------------- ارسال به AvalAI ----------------
     if assistant_reply is None:
         try:
             completion = avalai_client.chat.completions.create(
@@ -324,17 +328,18 @@ def chat():
             print("❌ خطا در ارتباط با AvalAI:", e)
             assistant_reply = "مشکلی در ارتباط با سرور هوش مصنوعی پیش آمد."
 
-    # ----- ذخیره مکالمه -----
+    # ---------------- ذخیره مکالمه ----------------
     try:
-        new_history = cleaned_history + [
+        new_entries = [
             {"role": "user", "content": message},
             {"role": "assistant", "content": assistant_reply},
         ]
-
+        cleaned_history.extend(new_entries)
+        # فقط 60 پیام آخر را ذخیره می‌کنیم
         if conv:
-            conv.messages = json.dumps(new_history[-60:], ensure_ascii=False)
+            conv.messages = json.dumps(cleaned_history[-60:], ensure_ascii=False)
         else:
-            conv = Conversation(user_id=user_id, messages=json.dumps(new_history[-60:], ensure_ascii=False))
+            conv = Conversation(user_id=user_id, messages=json.dumps(cleaned_history[-60:], ensure_ascii=False))
             db.session.add(conv)
         db.session.commit()
     except Exception as e:
@@ -342,6 +347,7 @@ def chat():
         print("❌ خطا در ذخیره حافظه:", e)
 
     return jsonify({"reply": assistant_reply})
+
 
 
 
@@ -374,4 +380,4 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run( port=5000, debug=True)
-
+    
