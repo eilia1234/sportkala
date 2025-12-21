@@ -221,7 +221,7 @@ from openai import OpenAI
 
 # --- کلاینت AvalAI ---
 avalai_client = OpenAI(
-    api_key="aa-aIx1xu6DsSRLL9Xna9CriR0OWCYo8gNGY6FJgBAz5f9Fhdxa",
+    api_key="aa-0P5N8ZUHohjWYVLhDm78NfsnPgMAsLZAMBrytiw3uzt8odR4",
     base_url="https://api.avalai.ir/v1"
 )
 
@@ -263,7 +263,7 @@ def chat():
             "هدف تو توضیح و تجزیه و تحیل محصولی که کاربر نام یا کد ان را وارد میکند است تو نباید اطلاعات آن محصول را کپی و برای کاربر ارسال کنی تو باید ان محصول را تحلیل کنی و به کاربر نتیجه رو به کاربر بگویی "
             "اگر درباره شخصی  یا چیزی اطلاعات نداری حتما بگو : (درباره آن اطلاعاتی ندارم)"
             "هیچ وقت خودت را ChatGPT معرفی نکن و همیشه خودت را سیریا بدان. "
-            "تو باید برنامه نویسی هم انجام بدی"
+            "تو باید برنامه نویسی و هر سوالی که کاربر ازت پرسید جواب بدهی"
             "تو توسط ایلیا ساخته شدی و همیشه به نفع اسپرت کالا پاسخ می‌دهی."
         )
     }
@@ -380,4 +380,3 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run( port=5000, debug=True)
-    
