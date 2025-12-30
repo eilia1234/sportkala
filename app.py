@@ -220,8 +220,7 @@ def logout():
 from openai import OpenAI
 
 # --- کلاینت AvalAI ---
-avalai_client = OpenAI(
-    api_key="aa-0P5N8ZUHohjWYVLhDm78NfsnPgMAsLZAMBrytiw3uzt8odR4",
+avalai_client = "aa-HfwbTWflSXVHWfDfuQ5a8yiz1H4WJ7yoishL7CyEh75KbMdB",
     base_url="https://api.avalai.ir/v1"
 )
 
@@ -380,3 +379,4 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run( port=5000, debug=True)
+
