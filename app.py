@@ -220,7 +220,8 @@ def logout():
 from openai import OpenAI
 
 # --- کلاینت AvalAI ---
-avalai_client = "aa-HfwbTWflSXVHWfDfuQ5a8yiz1H4WJ7yoishL7CyEh75KbMdB",
+avalai_client = OpenAI(
+    api_key="aa-HfwbTWflSXVHWfDfuQ5a8yiz1H4WJ7yoishL7CyEh75KbMdB",
     base_url="https://api.avalai.ir/v1"
 )
 
@@ -357,7 +358,7 @@ from datetime import datetime, timedelta
 def offer_timer():
     iran_now = datetime.utcnow() + timedelta(hours=3, minutes=30)
 
-    PERIOD = 48 * 60 * 60  # ۴۸ ساعت
+    PERIOD = 24 * 60 * 60  # ۴۸ ساعت
 
     # نیمه‌شب امروز ایران
     midnight = iran_now.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -379,5 +380,3 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run( port=5000, debug=True)
-
-
